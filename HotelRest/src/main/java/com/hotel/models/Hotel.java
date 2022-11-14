@@ -72,6 +72,13 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
+	public Hotel(String name, double stars, ArrayList<Room> rooms, Position address) {
+		this.name = name;
+		this.stars = stars;
+		this.rooms = rooms;
+		this.address = address;
+	}
+	
 	@Override
 	public String toString() {
 		return "Hotel [id=" + id + ", name=" + name + ", stars=" + stars + ", rooms=" + rooms + ", address=" + address
