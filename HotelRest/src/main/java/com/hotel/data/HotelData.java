@@ -17,8 +17,8 @@ public class HotelData {
 	@Bean
 	public CommandLineRunner initDatabase(HotelRepository repository) {
 		return args -> {
-			logger.info("Loading database with " + repository.save(new Hotel("Crowne Plaza", 4.7, null, null)));
-			logger.info("Loading database with " + repository.save(new Hotel("Kyriad", 4.3, null, null)));
+			logger.info("Loading database with " + repository.save(new Hotel("Crowne Plaza", 4.7, "efzf", "sefzfe")));
+			logger.info("Loading database with " + repository.save(new Hotel("Kyriad", 4.3, "qddzzd", "zefzzef")));
 		};
 	}
 }

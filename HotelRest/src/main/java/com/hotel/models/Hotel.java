@@ -14,9 +14,9 @@ public class Hotel {
 	private long id;
 	private String name;
 	private double stars;
-	private ArrayList<Room> rooms;
-	private Position address;
-	private ArrayList<Reservation> resa;
+	private String rooms;
+	private String address;
+	private String resa;
 	private String imageFolder;
 	
 	public long getId() {
@@ -37,22 +37,22 @@ public class Hotel {
 	public void setStars(double stars) {
 		this.stars = stars;
 	}
-	public ArrayList<Room> getRooms() {
+	public String getRooms() {
 		return rooms;
 	}
-	public void setRooms(ArrayList<Room> rooms) {
+	public void setRooms(String rooms) {
 		this.rooms = rooms;
 	}
-	public Position getAddress() {
+	public String getAddress() {
 		return address;
 	}
-	public void setAddress(Position address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
-	public ArrayList<Reservation> getResa() {
+	public String getResa() {
 		return resa;
 	}
-	public void setResa(ArrayList<Reservation> resa) {
+	public void setResa(String resa) {
 		this.resa = resa;
 	}
 	public String getImageFolder() {
@@ -62,7 +62,7 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, ArrayList<Room> rooms, Position address, ArrayList<Reservation> resa,
+	public Hotel(String name, double stars, String rooms, String address, String resa,
 			String imageFolder) {
 		this.name = name;
 		this.stars = stars;
@@ -72,13 +72,20 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, ArrayList<Room> rooms, Position address) {
+	public Hotel(String name, double stars, String rooms, String address) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
 		this.address = address;
 	}
 	
+	
+	public Hotel() {
+		this.name = "Undefined";
+		this.stars = 0;
+		this.rooms = "none";
+		this.address = "none";
+	}
 	@Override
 	public String toString() {
 		return "Hotel [id=" + id + ", name=" + name + ", stars=" + stars + ", rooms=" + rooms + ", address=" + address
