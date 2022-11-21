@@ -1,20 +1,28 @@
 package com.hotel.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Position {
 	
 	@Id
 	@GeneratedValue
+	@Column(name = "position_id")
 	private long id;
 	private String city;
 	private String country;
 	private String street;
 	private int number;
 	private String gps;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "position_id")
+	private Hotel hotel;
 	
 	
 	public long getId() {

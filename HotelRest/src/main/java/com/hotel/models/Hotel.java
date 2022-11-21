@@ -1,9 +1,13 @@
 package com.hotel.models;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Hotel {
@@ -14,8 +18,7 @@ public class Hotel {
 	private String name;
 	private double stars;
 	private String rooms;
-	
-	@JoinColumn(name="address", nullable=true)
+	@OneToOne(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Position address;
 	private String resa;
 	private String imageFolder;
