@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.hotel.models.Hotel;
+import com.hotel.models.Position;
 import com.hotel.repositories.HotelRepository;
 
 @Configuration
@@ -17,8 +18,9 @@ public class HotelData {
 	@Bean
 	public CommandLineRunner initDatabase(HotelRepository repository) {
 		return args -> {
-			logger.info("Loading database with " + repository.save(new Hotel("Crowne Plaza", 4.7, "efzf", "sefzfe")));
-			logger.info("Loading database with " + repository.save(new Hotel("Kyriad", 4.3, "qddzzd", "zefzzef")));
+			
+			Position p1 = new Position("Montpellier", "France", "rue du jeu de paume", 1);
+			logger.info("Loading database with " + repository.save(new Hotel("Crowne Plaza", 4.7, "sefzfe", p1)));
 		};
 	}
 }

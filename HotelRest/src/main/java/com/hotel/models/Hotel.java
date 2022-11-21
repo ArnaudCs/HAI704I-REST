@@ -1,10 +1,9 @@
 package com.hotel.models;
 
-import java.util.ArrayList;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 
 @Entity
 public class Hotel {
@@ -15,7 +14,9 @@ public class Hotel {
 	private String name;
 	private double stars;
 	private String rooms;
-	private String address;
+	
+	@JoinColumn(name="address", nullable=true)
+	private Position address;
 	private String resa;
 	private String imageFolder;
 	
@@ -43,10 +44,10 @@ public class Hotel {
 	public void setRooms(String rooms) {
 		this.rooms = rooms;
 	}
-	public String getAddress() {
+	public Position getAddress() {
 		return address;
 	}
-	public void setAddress(String address) {
+	public void setAddress(Position address) {
 		this.address = address;
 	}
 	public String getResa() {
@@ -62,7 +63,7 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, String rooms, String address, String resa,
+	public Hotel(String name, double stars, String rooms, Position address, String resa,
 			String imageFolder) {
 		this.name = name;
 		this.stars = stars;
@@ -72,7 +73,7 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, String rooms, String address) {
+	public Hotel(String name, double stars, String rooms, Position address) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
@@ -84,7 +85,7 @@ public class Hotel {
 		this.name = "Undefined";
 		this.stars = 0;
 		this.rooms = "none";
-		this.address = "none";
+		this.address = new Position();
 	}
 	@Override
 	public String toString() {
