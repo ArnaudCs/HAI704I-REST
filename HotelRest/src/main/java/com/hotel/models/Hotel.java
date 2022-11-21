@@ -1,12 +1,16 @@
 package com.hotel.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -18,11 +22,13 @@ public class Hotel {
 	private long id;
 	private String name;
 	private double stars;
-	private String rooms;
+	@OneToMany(mappedBy="hotel")
+	private Set<Room> rooms;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name ="address_id", referencedColumnName = "id")
 	private Position address;
-	private String resa;
+	//@OneToMany(mappedBy="hotelResa")
+	private String resaHotel;
 	private String imageFolder;
 	
 	public long getId() {
@@ -43,10 +49,10 @@ public class Hotel {
 	public void setStars(double stars) {
 		this.stars = stars;
 	}
-	public String getRooms() {
+	public Set<Room> getRooms() {
 		return rooms;
 	}
-	public void setRooms(String rooms) {
+	public void setRooms(Set<Room> rooms) {
 		this.rooms = rooms;
 	}
 	public Position getAddress() {
@@ -56,10 +62,10 @@ public class Hotel {
 		this.address = address;
 	}
 	public String getResa() {
-		return resa;
+		return resaHotel;
 	}
 	public void setResa(String resa) {
-		this.resa = resa;
+		this.resaHotel = resa;
 	}
 	public String getImageFolder() {
 		return imageFolder;
@@ -68,17 +74,17 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, String rooms, Position address, String resa,
+	public Hotel(String name, double stars, Set<Room> rooms, Position address, String resa,
 			String imageFolder) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
 		this.address = address;
-		this.resa = resa;
+		this.resaHotel = resa;
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, String rooms, Position address) {
+	public Hotel(String name, double stars, Set<Room> rooms, Position address) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
@@ -89,13 +95,13 @@ public class Hotel {
 	public Hotel() {
 		this.name = "Undefined";
 		this.stars = 0;
-		this.rooms = "none";
+		this.rooms = new HashSet<>();
 		this.address = new Position();
 	}
 	@Override
 	public String toString() {
 		return "Hotel [id=" + id + ", name=" + name + ", stars=" + stars + ", rooms=" + rooms + ", address=" + address
-				+ ", resa=" + resa + ", imageFolder=" + imageFolder + "]";
+				+ ", resa=" + resaHotel + ", imageFolder=" + imageFolder + "]";
 	}
 	
 	
