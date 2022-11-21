@@ -7,21 +7,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "address")
 public class Position {
 	
 	@Id
 	@GeneratedValue
-	@Column(name = "position_id")
+	@Column(name = "id")
 	private long id;
 	private String city;
 	private String country;
 	private String street;
 	private int number;
 	private String gps;
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "position_id")
+	@OneToOne(mappedBy = "address")
 	private Hotel hotel;
 	
 	

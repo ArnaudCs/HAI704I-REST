@@ -14,11 +14,13 @@ public class Hotel {
 	// Attributes
 	@Id
 	@GeneratedValue
+	@Column(name = "id")
 	private long id;
 	private String name;
 	private double stars;
 	private String rooms;
-	@OneToOne(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name ="address_id", referencedColumnName = "id")
 	private Position address;
 	private String resa;
 	private String imageFolder;
