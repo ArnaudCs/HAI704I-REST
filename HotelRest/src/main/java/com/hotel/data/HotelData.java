@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.hotel.models.Hotel;
 import com.hotel.models.Position;
+import com.hotel.models.Reservation;
 import com.hotel.models.Room;
 import com.hotel.repositories.HotelRepository;
 
@@ -23,6 +24,7 @@ public class HotelData {
 	public CommandLineRunner initDatabase(HotelRepository repository) {
 		return args -> {
 			
+			Set<Reservation> resa = new HashSet<Reservation>();
 			Set<Room> rooms = new HashSet<Room>();
 			Room r1 = new Room(1, 50, 1);
 			Room r2 = new Room(3, 55, 1);
@@ -34,7 +36,7 @@ public class HotelData {
 			rooms.add(r4);
 			
 			Position p1 = new Position("Montpellier", "France", "rue du jeu de paume", 1);
-			logger.info("Loading database with " + repository.save(new Hotel("Crowne Plaza", 4.7, rooms, p1, "none", "none")));
+			logger.info("Loading database with " + repository.save(new Hotel("Crowne Plaza", 4.7, rooms, p1, resa, "none")));
 		};
 	}
 }

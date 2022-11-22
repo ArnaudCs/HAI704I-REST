@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -27,8 +26,8 @@ public class Hotel {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name ="address_id", referencedColumnName = "id")
 	private Position address;
-	//@OneToMany(mappedBy="hotelResa")
-	private String resaHotel;
+	@OneToMany(mappedBy="hotelResa")
+	private Set<Reservation> resas;
 	private String imageFolder;
 	
 	public long getId() {
@@ -61,11 +60,11 @@ public class Hotel {
 	public void setAddress(Position address) {
 		this.address = address;
 	}
-	public String getResa() {
-		return resaHotel;
+	public Set<Reservation> getResa() {
+		return resas;
 	}
-	public void setResa(String resa) {
-		this.resaHotel = resa;
+	public void setResa(Set<Reservation> resa) {
+		this.resas = resa;
 	}
 	public String getImageFolder() {
 		return imageFolder;
@@ -74,13 +73,13 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, Set<Room> rooms, Position address, String resa,
+	public Hotel(String name, double stars, Set<Room> rooms, Position address, Set<Reservation> resa,
 			String imageFolder) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
 		this.address = address;
-		this.resaHotel = resa;
+		this.resas = resa;
 		this.imageFolder = imageFolder;
 	}
 	
@@ -101,7 +100,7 @@ public class Hotel {
 	@Override
 	public String toString() {
 		return "Hotel [id=" + id + ", name=" + name + ", stars=" + stars + ", rooms=" + rooms + ", address=" + address
-				+ ", resa=" + resaHotel + ", imageFolder=" + imageFolder + "]";
+				+ ", resa=" + resas + ", imageFolder=" + imageFolder + "]";
 	}
 	
 	

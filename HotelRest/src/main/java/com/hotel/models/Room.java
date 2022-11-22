@@ -22,8 +22,8 @@ public class Room {
 	@ManyToOne
 	@JoinColumn(name="rooms", nullable=false)
 	private Hotel hotel;
-//	@OneToOne(mappedBy="room")
-	private String resa;
+	@OneToOne(mappedBy="room")
+	private Reservation resa;
 	
 	
 	public int getRoomNumber() {

@@ -99,19 +99,19 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 				break;
 				
 			case "4":
-				uri = URI_HOTEL;
-				System.out.println("Hotel infos:\nName: ");
-				String name = reader.readLine();
-				System.out.println("\nRating: ");
-				double rating = Double.parseDouble(reader.readLine());
-				System.out.println("\nAdress: ");
-				String adr = reader.readLine();
-				System.out.println("\nRooms: ");
-				String rooms = reader.readLine();
-				
-				Hotel newHotel = new Hotel(name, rating, rooms, adr);
-				Hotel returnedHotel = proxy.postForObject(uri, newHotel, Hotel.class);
-				System.out.println("Successfully added hotel: \n" + returnedHotel.toString());
+//				uri = URI_HOTEL;
+//				System.out.println("Hotel infos:\nName: ");
+//				String name = reader.readLine();
+//				System.out.println("\nRating: ");
+//				double rating = Double.parseDouble(reader.readLine());
+//				System.out.println("\nAdress: ");
+//				String adr = reader.readLine();
+//				System.out.println("\nRooms: ");
+//				String rooms = reader.readLine();
+//				
+//				Hotel newHotel = new Hotel(name, rating, rooms, adr);
+//				Hotel returnedHotel = proxy.postForObject(uri, newHotel, Hotel.class);
+//				System.out.println("Successfully added hotel: \n" + returnedHotel.toString());
 				break;
 				
 			case "5":
@@ -124,22 +124,22 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 				break;
 				
 			case "6":
-				uri = URI_HOTEL_ID;
-				System.out.println("Hotel ID: ");
-				id = Integer.parseInt(reader.readLine());
-				System.out.println("New name: ");
-				name = reader.readLine();
-				System.out.println("New Rating: ");
-				rating = Double.parseDouble(reader.readLine());
-				System.out.println("New adress: ");
-				adr = reader.readLine();
-				System.out.println("New rooms: ");
-				rooms = reader.readLine();
-				params.put("id", String.valueOf(id));
-				newHotel = new Hotel(name, rating, rooms, adr);
-				
-				proxy.put(uri, newHotel, params);
-				System.out.println("Update done successfully!\n");
+//				uri = URI_HOTEL_ID;
+//				System.out.println("Hotel ID: ");
+//				id = Integer.parseInt(reader.readLine());
+//				System.out.println("New name: ");
+//				name = reader.readLine();
+//				System.out.println("New Rating: ");
+//				rating = Double.parseDouble(reader.readLine());
+//				System.out.println("New adress: ");
+//				adr = reader.readLine();
+//				System.out.println("New rooms: ");
+//				rooms = reader.readLine();
+//				params.put("id", String.valueOf(id));
+//				newHotel = new Hotel(name, rating, rooms, adr);
+//				
+//				proxy.put(uri, newHotel, params);
+//				System.out.println("Update done successfully!\n");
 				break;
 				
 			case QUIT:
