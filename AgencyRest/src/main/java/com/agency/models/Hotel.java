@@ -1,19 +1,23 @@
 package com.agency.models;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Hotel {
 
+	// Attributes
 	private long id;
 	private String name;
 	private double stars;
-	private String rooms;
+	private Set<Room> rooms;
 	private Position address;
-	private String resa;
+	private Set<Reservation> resas;
 	private String imageFolder;
+	
 	public long getId() {
 		return id;
 	}
@@ -32,10 +36,10 @@ public class Hotel {
 	public void setStars(double stars) {
 		this.stars = stars;
 	}
-	public String getRooms() {
+	public Set<Room> getRooms() {
 		return rooms;
 	}
-	public void setRooms(String rooms) {
+	public void setRooms(Set<Room> rooms) {
 		this.rooms = rooms;
 	}
 	public Position getAddress() {
@@ -44,11 +48,11 @@ public class Hotel {
 	public void setAddress(Position address) {
 		this.address = address;
 	}
-	public String getResa() {
-		return resa;
+	public Set<Reservation> getResa() {
+		return resas;
 	}
-	public void setResa(String resa) {
-		this.resa = resa;
+	public void setResa(Set<Reservation> resa) {
+		this.resas = resa;
 	}
 	public String getImageFolder() {
 		return imageFolder;
@@ -57,35 +61,38 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, String rooms, Position address, String resa, String imageFolder) {
+	public Hotel(String name, double stars, Set<Room> rooms, Position address, Set<Reservation> resa,
+			String imageFolder) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
 		this.address = address;
-		this.resa = resa;
+		this.resas = resa;
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, String rooms, Position address) {
+	public Hotel(String name, double stars, Set<Room> rooms, Position address) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
 		this.address = address;
-		this.imageFolder = "null";
-		this.resa = "null";
 	}
-		
+	
+	
 	public Hotel() {
-		this.name = "none";
+		this.name = "Undefined";
 		this.stars = 0;
-		this.rooms = "none";
+		this.rooms = new HashSet<>();
 		this.address = new Position();
-		this.imageFolder = "none";
-		this.resa = "none";
+	}
+	@Override
+	public String toString() {
+		return "Hotel [id=" + id + ", name=" + name + ", stars=" + stars + ", rooms=" + rooms + ", address=" + address
+				+ ", resa=" + resas.toString() + ", imageFolder=" + imageFolder + "]";
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, id, imageFolder, name, resa, rooms, stars);
+		return Objects.hash(address, id, imageFolder, name, getResa(), rooms, stars);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -98,13 +105,8 @@ public class Hotel {
 		Hotel other = (Hotel) obj;
 		return Objects.equals(address, other.address) && id == other.id
 				&& Objects.equals(imageFolder, other.imageFolder) && Objects.equals(name, other.name)
-				&& Objects.equals(resa, other.resa) && Objects.equals(rooms, other.rooms)
+				&& Objects.equals(getResa(), other.getResa()) && Objects.equals(rooms, other.rooms)
 				&& Double.doubleToLongBits(stars) == Double.doubleToLongBits(other.stars);
-	}
-	@Override
-	public String toString() {
-		return "Hotel [id=" + id + ", name=" + name + ", stars=" + stars + ", rooms=" + rooms + ", address=" + address
-				+ ", resa=" + resa + ", imageFolder=" + imageFolder + "]";
 	}
 	
 	
