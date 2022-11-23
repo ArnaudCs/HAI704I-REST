@@ -87,8 +87,7 @@ public class Hotel {
 	}
 	@Override
 	public String toString() {
-		return "Hotel [id=" + id + ", name=" + name + ", stars=" + stars + ", rooms=" + rooms + ", address=" + address
-				+ ", resa=" + resas.toString() + ", imageFolder=" + imageFolder + "]";
+		return "|- Hotel numéro " + id + "\n" + "|- Nom : " + name + "\n" + "|- Etoiles : " + stars + "\n" + "|- Address/" + address + "\n";
 	}
 	@Override
 	public int hashCode() {

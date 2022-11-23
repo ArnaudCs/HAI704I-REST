@@ -80,6 +80,10 @@ public class Position {
 	public String toString() {
 		return "Position : " + number + ", " + street + ", " + city + ", " + country + "\n";
 	}
+	
+	public String affichagePosition() {
+		return "|- Numéro de rue : " + number + "\n" + "|- Rue : " + street + "\n" + "|- Ville : " + city + "\n" + "|- Pays : " + country + "\n";
+	}
 
 	
 }
