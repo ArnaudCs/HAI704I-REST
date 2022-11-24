@@ -30,6 +30,12 @@ public class Hotel {
 	private Set<Reservation> resas;
 	private String imageFolder;
 	
+	public Set<Reservation> getResas() {
+		return resas;
+	}
+	public void setResas(Set<Reservation> resas) {
+		this.resas = resas;
+	}
 	public long getId() {
 		return id;
 	}
@@ -59,12 +65,6 @@ public class Hotel {
 	}
 	public void setAddress(Position address) {
 		this.address = address;
-	}
-	public Set<Reservation> getResa() {
-		return resas;
-	}
-	public void setResa(Set<Reservation> resa) {
-		this.resas = resa;
 	}
 	public String getImageFolder() {
 		return imageFolder;

@@ -3,9 +3,11 @@ package com.agency.cli;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -55,12 +57,10 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 	protected void menu() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(QUIT+". Quit.");
-		builder.append("\n1. Get number of hotels");
-		builder.append("\n2. Display all hotels");
-		builder.append("\n3. Get hotel by ID");
-		builder.append("\n4. Add new hotel");
-		builder.append("\n5. Delete hotel by ID");
-		builder.append("\n6. Update hotel");
+		builder.append("\n1. See all hotels");
+		builder.append("\n2. Get hotel by ID");
+		builder.append("\n3. Search hotel");
+		builder.append("\n4. Make reservation");
 		
 		System.out.println(builder);
 		
@@ -72,22 +72,14 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 		try {
 			switch(userInput) {
 			case "1":
-				String uri = URI_HOTEL + "/count";
-				ObjectMapper mapper = new ObjectMapper();
-				String countStr = proxy.getForObject(uri, String.class);
-				long count = (int)mapper.readValue(countStr, Map.class).get("count");
-				System.out.println(String.format("There are %d hotels\n", count));
-				break;
-				
-			case "2":
-				uri = URI_HOTEL;
+				String uri = URI_HOTEL;
 				Hotel[] hotels = proxy.getForObject(uri, Hotel[].class);
 				System.out.println("Hotels:");
 				Arrays.asList(hotels).forEach( System.out::println);
 				System.out.println();
 				break;
-				
-			case "3":
+
+			case "2":
 				uri = URI_HOTEL_ID;
 				System.out.println("Hotel ID: ");
 				int id = Integer.parseInt(reader.readLine());
@@ -97,48 +89,33 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 				System.out.println();
 				break;
 				
+			case "3":
+				uri = URI_HOTEL + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
+				System.out.println("Where do you want to go ? (City or country)\n");
+				String position = reader.readLine();
+				System.out.println("\nRating: ");
+				double rating = Double.parseDouble(reader.readLine());
+				System.out.println("\nPrice: ");
+				double price = Double.parseDouble(reader.readLine());
+				System.out.println("\nDate in: ");
+				LocalDate inDate = LocalDate.parse(reader.readLine());
+				System.out.println("\nDate out: ");
+				LocalDate outDate = LocalDate.parse(reader.readLine());
+				System.out.println("\nNumber of persons: ");
+				int size = reader.read();
+				params.put("position", position);
+				params.put("datein", inDate.toString());
+				params.put("dateout", outDate.toString());
+				params.put("size", String.valueOf(size));
+				params.put("rating", String.valueOf(rating));
+				params.put("price", String.valueOf(price));
+				
+				Hotel returnedHotel = proxy.getForObject(uri, Hotel.class, params);
+				System.out.println("Results:\n");
+				System.out.println(returnedHotel.toString());
+				break;
+				
 			case "4":
-//				uri = URI_HOTEL;
-//				System.out.println("Hotel infos:\nName: ");
-//				String name = reader.readLine();
-//				System.out.println("\nRating: ");
-//				double rating = Double.parseDouble(reader.readLine());
-//				System.out.println("\nAdress: ");
-//				String adr = reader.readLine();
-//				System.out.println("\nRooms: ");
-//				String rooms = reader.readLine();
-//				
-//				Hotel newHotel = new Hotel(name, rating, rooms, adr);
-//				Hotel returnedHotel = proxy.postForObject(uri, newHotel, Hotel.class);
-//				System.out.println("Successfully added hotel: \n" + returnedHotel.toString());
-				break;
-				
-			case "5":
-				uri = URI_HOTEL_ID;
-				System.out.println("Hotel ID: ");
-				id = Integer.parseInt(reader.readLine());
-				params.put("id", String.valueOf(id));
-				proxy.delete(uri, params);
-				System.out.println("Successfully deleted\n");
-				break;
-				
-			case "6":
-//				uri = URI_HOTEL_ID;
-//				System.out.println("Hotel ID: ");
-//				id = Integer.parseInt(reader.readLine());
-//				System.out.println("New name: ");
-//				name = reader.readLine();
-//				System.out.println("New Rating: ");
-//				rating = Double.parseDouble(reader.readLine());
-//				System.out.println("New adress: ");
-//				adr = reader.readLine();
-//				System.out.println("New rooms: ");
-//				rooms = reader.readLine();
-//				params.put("id", String.valueOf(id));
-//				newHotel = new Hotel(name, rating, rooms, adr);
-//				
-//				proxy.put(uri, newHotel, params);
-//				System.out.println("Update done successfully!\n");
 				break;
 				
 			case QUIT:

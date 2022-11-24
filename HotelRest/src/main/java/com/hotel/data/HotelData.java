@@ -36,7 +36,8 @@ public class HotelData {
 			rooms.add(r4);
 			
 			Position p1 = new Position("Montpellier", "France", "rue du jeu de paume", 1);
-			logger.info("Loading database with " + repository.save(new Hotel("Crowne Plaza", 4.7, rooms, p1, resa, "none")));
+			Hotel h1 = new Hotel("Crowne Plaza", 4.7, rooms, p1, resa, "none");
+			logger.info("Loading database with " + repository.save(h1));
 		};
 	}
 }
