@@ -1,11 +1,14 @@
 package com.hotel.models;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -20,10 +23,10 @@ public class Room {
 	private double price;
 	private int size;
 	@ManyToOne
-	@JoinColumn(name="rooms", nullable=false)
+	@JoinColumn(name="hotel_id")
 	private Hotel hotel;
-	@OneToOne(mappedBy="room")
-	private Reservation resa;
+	@OneToMany(mappedBy="room")
+	private Set<Reservation> resa;
 	
 	
 	public long getId() {
@@ -56,6 +59,15 @@ public class Room {
 		this.price = price;
 		this.size = size;
 	}
+	
+	
+	public Room(int roomNumber, double price, int size, Hotel hotel) {
+		this.roomNumber = roomNumber;
+		this.price = price;
+		this.size = size;
+		this.hotel = hotel;
+	}
+	
 	public Room() {
 		this.roomNumber = 0;
 		this.price = 0;

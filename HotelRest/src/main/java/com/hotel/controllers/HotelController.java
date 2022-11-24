@@ -1,6 +1,7 @@
 package com.hotel.controllers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -63,33 +64,33 @@ public class HotelController {
 		LocalDate in = LocalDate.parse(datein);
 		LocalDate out = LocalDate.parse(dateout);
 		Hotel toReturnHotel = hotels.get(0);
-		Set<Room> newRooms = new HashSet<Room>();
+		List<Room> newRooms = new ArrayList<Room>();
 		if((p.getCity().contains(position) || p.getCountry().contains(position)) && stars >= rating) {
-//			for (Room room : hotels.get(0).getRooms()) {
-//				double roomPrice = room.getPrice();
-//				int roomSize = room.getSize();
-//				if(roomPrice <= price && roomSize >= size) {
-//					boolean isOkay = true;
-//					for (Reservation resa : hotels.get(0).getResa()) {
-//						if(resa.getRoom().getRoomNumber() == room.getRoomNumber()) {
-//							if((in.isAfter(resa.getIn()) && in.isBefore(resa.getOut()))
-//								|| (out.isAfter(resa.getIn()) && out.isBefore(resa.getOut()))
-//								|| ((in.isBefore(resa.getIn()) && out.isAfter(resa.getOut())))
-//								|| (in.isAfter(resa.getIn()) && out.isBefore(resa.getOut()))) {
-//								isOkay = false;
-//								continue;
-//							}
-//						}
-//					}
-//					if(isOkay) {
-//						newRooms.add(room);
-//					}
-//				}
-//			}
-//			if(newRooms.size() != 0) {
+			for (Room room : hotels.get(0).getRooms()) {
+				double roomPrice = room.getPrice();
+				int roomSize = room.getSize();
+				if(roomPrice <= price && roomSize >= size) {
+					boolean isOkay = true;
+					for (Reservation resa : hotels.get(0).getResas()) {
+						if(resa.getRoom().getRoomNumber() == room.getRoomNumber()) {
+							if((in.isAfter(resa.getIn()) && in.isBefore(resa.getOut()))
+								|| (out.isAfter(resa.getIn()) && out.isBefore(resa.getOut()))
+								|| ((in.isBefore(resa.getIn()) && out.isAfter(resa.getOut())))
+								|| (in.isAfter(resa.getIn()) && out.isBefore(resa.getOut()))) {
+								isOkay = false;
+								continue;
+							}
+						}
+					}
+					if(isOkay) {
+						newRooms.add(room);
+					}
+				}
+			}
+			if(newRooms.size() != 0) {
 				toReturnHotel.setRooms(newRooms);
 				return toReturnHotel;
-//			}
+			}
 		}
 		throw new HotelNotFoundException("Error : could not found hotel by ID");
 	}

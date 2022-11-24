@@ -1,16 +1,20 @@
 package com.hotel.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 
 @Entity
 public class Hotel {
@@ -21,8 +25,8 @@ public class Hotel {
 	private long id;
 	private String name;
 	private double stars;
-	@OneToMany(mappedBy="hotel")
-	private Set<Room> rooms;
+	@OneToMany(mappedBy="hotel", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	private List<Room> rooms;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name ="address_id", referencedColumnName = "id")
 	private Position address;
@@ -54,10 +58,10 @@ public class Hotel {
 	public void setStars(double stars) {
 		this.stars = stars;
 	}
-	public Set<Room> getRooms() {
+	public List<Room> getRooms() {
 		return rooms;
 	}
-	public void setRooms(Set<Room> rooms) {
+	public void setRooms(List<Room> rooms) {
 		this.rooms = rooms;
 	}
 	public Position getAddress() {
@@ -73,7 +77,7 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, Set<Room> rooms, Position address, Set<Reservation> resa,
+	public Hotel(String name, double stars, List<Room> rooms, Position address, Set<Reservation> resa,
 			String imageFolder) {
 		this.name = name;
 		this.stars = stars;
@@ -83,7 +87,7 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, Set<Room> rooms, Position address) {
+	public Hotel(String name, double stars, List<Room> rooms, Position address) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
@@ -94,7 +98,7 @@ public class Hotel {
 	public Hotel() {
 		this.name = "Undefined";
 		this.stars = 0;
-		this.rooms = new HashSet<>();
+		this.rooms = new ArrayList<Room>();
 		this.address = new Position();
 	}
 	@Override

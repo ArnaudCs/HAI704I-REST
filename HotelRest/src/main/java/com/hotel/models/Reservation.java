@@ -25,11 +25,11 @@ public class Reservation {
 	@Column(name = "dateOut")
 	private LocalDate out;
 	private String cc;
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name ="room_id", referencedColumnName = "id")
+	@ManyToOne
+	@JoinColumn(name ="room_id", nullable=true)
 	private Room room;
 	@ManyToOne
-	@JoinColumn(name="hotel_id", nullable=false)
+	@JoinColumn(name="hotel_id", nullable=true)
 	private Hotel hotelResa;
 	
 	
