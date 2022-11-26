@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.web.ServerProperties.Jetty.Threads;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -33,12 +34,13 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 		try {
 			inputReader = new BufferedReader(new InputStreamReader(System.in));
 			setTestServiceUrl(inputReader);
-			URI_HOTEL = SERVICE_URL + "/hotels";
+			URI_HOTEL = SERVICE_URL + "hotels";
 			URI_HOTEL_ID = URI_HOTEL + "/{id}";
 			do {
 				menu();
 				userInput = inputReader.readLine();
 				processUserInput(inputReader, userInput, proxy);
+				
 			} while (!userInput.equals(QUIT));
 			System.exit(0);
 		}
@@ -50,7 +52,7 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 
 	@Override
 	protected boolean validServiceUrl() {
-		return SERVICE_URL.equals("http://localhost:8080/hotelservice/api/");
+		return SERVICE_URL.equals("http://localhost:8080/hotelservice/api");
 	}
 
 	@Override
@@ -98,14 +100,14 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 				System.out.println("\nPrice: ");
 				double price = Double.parseDouble(reader.readLine());
 				System.out.println("\nDate in: ");
-				LocalDate inDate = LocalDate.parse(reader.readLine());
+				String inDate = reader.readLine();
 				System.out.println("\nDate out: ");
-				LocalDate outDate = LocalDate.parse(reader.readLine());
+				String outDate = reader.readLine();
 				System.out.println("\nNumber of persons: ");
-				int size = reader.read();
+				int size = Integer.parseInt(reader.readLine());
 				params.put("position", position);
-				params.put("datein", inDate.toString());
-				params.put("dateout", outDate.toString());
+				params.put("datein", inDate);
+				params.put("dateout", outDate);
 				params.put("size", String.valueOf(size));
 				params.put("rating", String.valueOf(rating));
 				params.put("price", String.valueOf(price));
