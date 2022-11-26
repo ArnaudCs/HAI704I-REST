@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,14 +18,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.agency.exceptions.ReservationException;
 import com.agency.models.Hotel;
+import com.agency.models.Reservation;
+import com.agency.models.Room;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.agency.controllers.*;
 
 @Component
 public class HotelClientServiceCLI extends AbstractMain implements CommandLineRunner {
 
 	@Autowired
 	private RestTemplate proxy;
+	private static Map<String, String> URIS;
 	private static String URI_HOTEL;
 	private static String URI_HOTEL_ID;
 	
@@ -34,8 +42,12 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 		try {
 			inputReader = new BufferedReader(new InputStreamReader(System.in));
 			setTestServiceUrl(inputReader);
-			URI_HOTEL = SERVICE_URL + "hotels";
+			URI_HOTEL = "hotels";
 			URI_HOTEL_ID = URI_HOTEL + "/{id}";
+			URIS = new HashMap<String, String>();
+			URIS.put(SERVICE_URL1 + "hotels", SERVICE_URL1 + URI_HOTEL_ID);
+//			URIS.put(SERVICE_URL2 + "hotels", SERVICE_URL2 + URI_HOTEL_ID);
+//			URIS.put(SERVICE_URL3 + "hotels", SERVICE_URL3 + URI_HOTEL_ID);
 			do {
 				menu();
 				userInput = inputReader.readLine();
@@ -52,7 +64,7 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 
 	@Override
 	protected boolean validServiceUrl() {
-		return SERVICE_URL.equals("http://localhost:8080/hotelservice/api");
+		return SERVICE_URL1.equals("http://localhost:8080/hotelservice/api");
 	}
 
 	@Override
@@ -74,25 +86,27 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 		try {
 			switch(userInput) {
 			case "1":
-				String uri = URI_HOTEL;
-				Hotel[] hotels = proxy.getForObject(uri, Hotel[].class);
 				System.out.println("Hotels:");
-				Arrays.asList(hotels).forEach( System.out::println);
-				System.out.println();
+				for (String uri : URIS.keySet()) {
+					Hotel[] hotels = proxy.getForObject(uri, Hotel[].class);
+					Arrays.asList(hotels).forEach(System.out::println);
+//					System.out.println();					
+				}
 				break;
 
 			case "2":
-				uri = URI_HOTEL_ID;
 				System.out.println("Hotel ID: ");
 				int id = Integer.parseInt(reader.readLine());
 				params.put("id", String.valueOf(id));
-				Hotel hotel = proxy.getForObject(uri, Hotel.class, params);
-				System.out.println(String.format("Hotel with ID %s: %s", id, hotel));
+				for (String uri : URIS.keySet()) {
+					String url = URIS.get(uri);
+					Hotel hotel = proxy.getForObject(uri, Hotel.class, params);
+					System.out.println(String.format("Hotel with ID %s: %s", id, hotel));					
+				}
 				System.out.println();
 				break;
 				
 			case "3":
-				uri = URI_HOTEL + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
 				System.out.println("Where do you want to go ? (City or country)\n");
 				String position = reader.readLine();
 				System.out.println("\nRating: ");
@@ -112,9 +126,59 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 				params.put("rating", String.valueOf(rating));
 				params.put("price", String.valueOf(price));
 				
-				Hotel returnedHotel = proxy.getForObject(uri, Hotel.class, params);
+				List<Hotel> resultHotel = new ArrayList<>(); 
+				int cpt = 1;
+				ArrayList<String> uriList = new ArrayList<>();
 				System.out.println("Results:\n");
-				System.out.println(returnedHotel.toString());
+				for (String uri : URIS.keySet()) {
+					String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
+					Hotel returnedHotel = proxy.getForObject(url, Hotel.class, params);
+					uriList.add(uri);
+					resultHotel.add(returnedHotel);
+					System.out.println("Hoten n°"+ String.valueOf(cpt));
+					System.out.println(returnedHotel.toString());
+					for (Room room: returnedHotel.getRooms()) {
+						System.out.println(room.toString());						
+					}
+				}
+				
+				
+				System.out.println("Would you like to order one of these ?\n");
+				int hotelChoice = -1;
+				int roomChoice = 0;
+				while(hotelChoice == -1) {
+					System.out.println("Hotel number (0 to exit): ");
+					hotelChoice = Integer.parseInt(reader.readLine());
+					if(hotelChoice == 0) {
+						System.out.println("Quitting hotel research...");
+						break;
+					}
+					else if(hotelChoice > resultHotel.size() || hotelChoice <= -1) {
+						System.err.println("Impossible choice !");
+						hotelChoice = -1;
+					}
+					else {
+						System.out.println("Room number : ");
+						roomChoice = Integer.parseInt(reader.readLine());
+					}
+				}
+				LocalDate ind = LocalDate.parse(inDate);
+				LocalDate outd = LocalDate.parse(outDate);
+				try {
+					Hotel selectedHotel = resultHotel.get(hotelChoice-1);
+					Room selectedRoom = selectedHotel.getRooms().get(roomChoice-1);
+					Reservation resa = AgencyController.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
+					selectedHotel.getResa().add(resa);
+					params.put("id", String.valueOf(selectedHotel.getId()));
+					String uriID = URIS.get(uriList.get(hotelChoice-1));
+					proxy.put(uriID, selectedHotel, params);
+					
+				} catch (ReservationException e) {
+					e.printStackTrace();
+					break;
+				}
+				
+				
 				break;
 				
 			case "4":

@@ -34,7 +34,7 @@ public class HotelController {
 	
 	@Autowired
 	private HotelRepository repository;
-	private static final String uri = "hotelservice/api";
+	private static final String uri = "crowne/api";
 	
 	@GetMapping(uri + "/hotels")
 	public List<Hotel> getAllHotels() {
@@ -104,11 +104,8 @@ public class HotelController {
 	@PutMapping(uri + "/hotels/{id}")
 	public Hotel updateHotel(@RequestBody Hotel newHotel, @PathVariable long id) {
 		return repository.findById(id).map(hotel -> {
-			hotel.setName(newHotel.getName());
-			hotel.setStars(newHotel.getStars());
-			hotel.setAddress(newHotel.getAddress());
-			hotel.setRooms(newHotel.getRooms());
-			hotel.setResas(newHotel.getResas());
+			Reservation resa = newHotel.getResas().get(0);
+			hotel.getResas().add(resa);
 			repository.save(hotel);
 			return hotel;
 		}).orElseGet(() -> {

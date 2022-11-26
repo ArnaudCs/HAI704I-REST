@@ -1,8 +1,8 @@
 package com.agency.models;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -13,9 +13,9 @@ public class Hotel {
 	private long id;
 	private String name;
 	private double stars;
-	private Set<Room> rooms;
+	private List<Room> rooms;
 	private Position address;
-	private Set<Reservation> resas;
+	private List<Reservation> resas;
 	private String imageFolder;
 	
 	public long getId() {
@@ -36,10 +36,10 @@ public class Hotel {
 	public void setStars(double stars) {
 		this.stars = stars;
 	}
-	public Set<Room> getRooms() {
+	public List<Room> getRooms() {
 		return rooms;
 	}
-	public void setRooms(Set<Room> rooms) {
+	public void setRooms(List<Room> rooms) {
 		this.rooms = rooms;
 	}
 	public Position getAddress() {
@@ -48,10 +48,10 @@ public class Hotel {
 	public void setAddress(Position address) {
 		this.address = address;
 	}
-	public Set<Reservation> getResa() {
+	public List<Reservation> getResa() {
 		return resas;
 	}
-	public void setResa(Set<Reservation> resa) {
+	public void setResa(List<Reservation> resa) {
 		this.resas = resa;
 	}
 	public String getImageFolder() {
@@ -61,7 +61,7 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, Set<Room> rooms, Position address, Set<Reservation> resa,
+	public Hotel(String name, double stars, List<Room> rooms, Position address, List<Reservation> resa,
 			String imageFolder) {
 		this.name = name;
 		this.stars = stars;
@@ -71,7 +71,7 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, Set<Room> rooms, Position address) {
+	public Hotel(String name, double stars, List<Room> rooms, Position address) {
 		this.name = name;
 		this.stars = stars;
 		this.rooms = rooms;
@@ -82,7 +82,7 @@ public class Hotel {
 	public Hotel() {
 		this.name = "Undefined";
 		this.stars = 0;
-		this.rooms = new HashSet<>();
+		this.rooms = new ArrayList<>();
 		this.address = new Position();
 	}
 	@Override

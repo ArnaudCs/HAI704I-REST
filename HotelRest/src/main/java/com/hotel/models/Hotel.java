@@ -31,13 +31,13 @@ public class Hotel {
 	@JoinColumn(name ="address_id", referencedColumnName = "id")
 	private Position address;
 	@OneToMany(mappedBy="hotelResa")
-	private Set<Reservation> resas;
+	private List<Reservation> resas;
 	private String imageFolder;
 	
-	public Set<Reservation> getResas() {
+	public List<Reservation> getResas() {
 		return resas;
 	}
-	public void setResas(Set<Reservation> resas) {
+	public void setResas(List<Reservation> resas) {
 		this.resas = resas;
 	}
 	public long getId() {
@@ -77,7 +77,7 @@ public class Hotel {
 		this.imageFolder = imageFolder;
 	}
 	
-	public Hotel(String name, double stars, List<Room> rooms, Position address, Set<Reservation> resa,
+	public Hotel(String name, double stars, List<Room> rooms, Position address, List<Reservation> resa,
 			String imageFolder) {
 		this.name = name;
 		this.stars = stars;
@@ -100,6 +100,7 @@ public class Hotel {
 		this.stars = 0;
 		this.rooms = new ArrayList<Room>();
 		this.address = new Position();
+		this.resas = new ArrayList<Reservation>();
 	}
 	@Override
 	public String toString() {

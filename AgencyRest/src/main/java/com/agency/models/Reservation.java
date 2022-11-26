@@ -9,9 +9,16 @@ public class Reservation {
 	private String client;
 	private LocalDate in;
 	private LocalDate out;
-	private String cc;
+	private double amount;
 	private Room room;
+	private Hotel hotel;
 	
+	public Hotel getHotel() {
+		return hotel;
+	}
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
 	public long getId() {
 		return id;
 	}
@@ -36,11 +43,11 @@ public class Reservation {
 	public void setOut(LocalDate out) {
 		this.out = out;
 	}
-	public String getCc() {
-		return cc;
+	public double getAmount() {
+		return amount;
 	}
-	public void setCc(String cc) {
-		this.cc = cc;
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 	public Room getRoom() {
 		return room;
@@ -49,12 +56,13 @@ public class Reservation {
 		this.room = room;
 	}
 		
-	public Reservation(String client, LocalDate in, LocalDate out, String cc, Room room) {
+	public Reservation(String client, LocalDate in, LocalDate out, double amount, Room room, Hotel hotel) {
 		this.client = client;
 		this.in = in;
 		this.out = out;
-		this.cc = cc;
+		this.amount = amount;
 		this.room = room;
+		this.hotel = hotel;
 	}
 		
 	
@@ -62,7 +70,8 @@ public class Reservation {
 		this.client = "null";
 		this.in = LocalDate.parse("2000-01-01");
 		this.out = LocalDate.parse("2000-01-01");
-		this.cc = "0000000000000000";
+		this.amount = 0;
+		this.hotel = new Hotel();
 		this.room = new Room();
 	}
 	@Override
