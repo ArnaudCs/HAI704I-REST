@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.hotel</groupId>
-	<artifactId>webservice</artifactId>
+	<artifactId>Ritz</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>HotelRest</name>
+	<name>Ritz</name>
 	<description>Hotel WebService using REST</description>
 	<properties>
 		<java.version>11</java.version>

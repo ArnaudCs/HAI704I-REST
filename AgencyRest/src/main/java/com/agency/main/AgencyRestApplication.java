@@ -13,5 +13,4 @@ public class AgencyRestApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AgencyRestApplication.class, args);
 	}
-
 }
