@@ -25,7 +25,7 @@ public class HotelData {
 	@Bean
 	public CommandLineRunner initDatabase(HotelRepository repository) {
 		return args -> {
-			Hotel h1 = new Hotel("Ritz", 4.8, null, null, null, "none");
+			Hotel h1 = new Hotel("Ritz", 4.8, null, null, null, "http://hotelfinder.sc1samo7154.universe.wf/ritz/");
 			Set<Reservation> resa = new HashSet<Reservation>();
 			List<Room> rooms = new ArrayList<>();
 			Room r1 = new Room(1, 150, 3, h1);
