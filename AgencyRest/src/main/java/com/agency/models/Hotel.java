@@ -15,7 +15,7 @@ public class Hotel {
 	private double stars;
 	private List<Room> rooms;
 	private Position address;
-	private List<Reservation> resas;
+	private List<Reservation> resa;
 	private String imageFolder;
 	
 	public long getId() {
@@ -49,10 +49,10 @@ public class Hotel {
 		this.address = address;
 	}
 	public List<Reservation> getResa() {
-		return resas;
+		return resa;
 	}
 	public void setResa(List<Reservation> resa) {
-		this.resas = resa;
+		this.resa = resa;
 	}
 	public String getImageFolder() {
 		return imageFolder;
@@ -67,7 +67,7 @@ public class Hotel {
 		this.stars = stars;
 		this.rooms = rooms;
 		this.address = address;
-		this.resas = resa;
+		this.resa = resa;
 		this.imageFolder = imageFolder;
 	}
 	
@@ -87,26 +87,11 @@ public class Hotel {
 	}
 	@Override
 	public String toString() {
-		return "|- Hotel numéro " + id + "\n" + "|- Nom : " + name + "\n" + "|- Etoiles : " + stars + "\n" + "|- Address/" + address + "\n";
+		return "|- "+ name + "\n" + "|- Rating : " + stars + "\n" + "|- Address/" + address;
 	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(address, id, imageFolder, name, getResa(), rooms, stars);
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Hotel other = (Hotel) obj;
-		return Objects.equals(address, other.address) && id == other.id
-				&& Objects.equals(imageFolder, other.imageFolder) && Objects.equals(name, other.name)
-				&& Objects.equals(getResa(), other.getResa()) && Objects.equals(rooms, other.rooms)
-				&& Double.doubleToLongBits(stars) == Double.doubleToLongBits(other.stars);
-	}
-	
 	
 }

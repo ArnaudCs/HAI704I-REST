@@ -34,7 +34,7 @@ public class HotelController {
 	
 	@Autowired
 	private HotelRepository repository;
-	private static final String uri = "crowne/api";
+	private static final String uri = "ritz/api";
 	
 	@GetMapping(uri + "/hotels")
 	public List<Hotel> getAllHotels() {

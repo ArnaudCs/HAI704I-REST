@@ -12,7 +12,7 @@ public abstract class AbstractMain {
 	protected void setTestServiceUrl(BufferedReader inputReader) throws IOException {
 //		System.out.println("Provide URL to the WebService");
 		SERVICE_URL1 = "http://localhost:8080/crowne/api/";
-		SERVICE_URL2 = "http://localhost:8080/ritz/api/";
+		SERVICE_URL2 = "http://localhost:8081/ritz/api/";
 		//SERVICE_URL3 = "http://localhost:8080/ibis/api/";
 		
 //		while(!validServiceUrl()) {
