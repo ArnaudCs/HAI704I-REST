@@ -3,7 +3,6 @@ package com.agency.cli;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,9 +193,6 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 					}					
 				}
 						
-				break;
-				
-			case "4":
 				break;
 				
 			case QUIT:
