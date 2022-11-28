@@ -52,6 +52,46 @@ public class Agency {
 		this.offers = new ArrayList<Offers>(); 
 	}
 	
+	public Agency(long id) {
+		String choice = String.valueOf(id);
+		switch (choice) {
+		case "1":
+			this.agencyName = "Hotels.com";
+			this.offers = new ArrayList<Offers>();
+			Offers o1 = new Offers(1, "http://localhost:8080/crowne/api/", 10, this);
+			Offers o2 = new Offers(2, "http://localhost:8081/ritz/api/", 15, this);
+			Offers o3 = new Offers(3, "http://localhost:8082/ibis/api/", 5, this);
+			offers.add(o1);
+			offers.add(o2);
+			offers.add(o3);
+			break;
+		
+		case "2":
+			this.agencyName = "Expedia";
+			this.offers = new ArrayList<Offers>();
+			o1 = new Offers(1, "http://localhost:8083/formule/api/", 20, this);
+			o2 = new Offers(2, "http://localhost:8081/ritz/api/", 12, this);
+			o3 = new Offers(3, "http://localhost:8082/ibis/api/", 8, this);
+			offers.add(o1);
+			offers.add(o2);
+			offers.add(o3);
+			break;
+			
+		case "3":
+			this.agencyName = "Expedia";
+			this.offers = new ArrayList<Offers>();
+			o1 = new Offers(1, "http://localhost:8080/formule/api/", 21, this);
+			o2 = new Offers(2, "http://localhost:8081/ritz/api/", 9, this);
+			o3 = new Offers(3, "http://localhost:8082/ibis/api/", 5, this);
+			Offers o4 = new Offers(3, "http://localhost:8080crowne/api/", 11, this);
+			offers.add(o1);
+			offers.add(o2);
+			offers.add(o3);
+			break;
+		}
+		
+	}
+	
 	public void quitAgency() {
 		System.out.println("Thanks for using TripFinder\n Bye bye...");
 		System.exit(0);
