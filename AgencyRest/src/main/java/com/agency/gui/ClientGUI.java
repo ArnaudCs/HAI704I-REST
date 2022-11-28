@@ -61,12 +61,12 @@ public class ClientGUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblComparateur = new JLabel("TripAdvisor");
+		JLabel lblComparateur = new JLabel("HotelAdvisor");
 		lblComparateur.setVerticalAlignment(SwingConstants.TOP);
 		lblComparateur.setHorizontalAlignment(SwingConstants.CENTER);
 		lblComparateur.setForeground(new Color(255, 255, 255));
 		lblComparateur.setFont(new Font("Gayathri Thin", Font.BOLD, 40));
-		lblComparateur.setBounds(413, 26, 303, 37);
+		lblComparateur.setBounds(413, 15, 303, 48);
 		contentPane.add(lblComparateur);
 		
 		JSeparator separator = new JSeparator();
@@ -87,13 +87,13 @@ public class ClientGUI extends JFrame {
 
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\SearchBar.png"));
+		lblNewLabel.setIcon(new ImageIcon("/Users/macbook/Desktop/HAI704I-REST/Media/SearchBar.png"));
 		lblNewLabel.setBounds(380, 153, 380, 57);
 		contentPane.add(lblNewLabel);
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\background.jpg"));
-		background.setBounds(0, 0, 1132, 709);
+		background.setIcon(new ImageIcon("/Users/macbook/Desktop/HAI704I-REST/Media/background.jpg"));
+		background.setBounds(0, 0, 1137, 709);
 		contentPane.add(background);
 	}
 }
