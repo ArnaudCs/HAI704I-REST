@@ -14,9 +14,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @SpringBootApplication(scanBasePackages = {
 		"com.agency.data",
-		"com.agency.exceptions",
 		"com.agency.controllers",
-//		"com.agency.client",
+		"com.agency.exceptions",
+		"com.agency.client",
 //		"com.agency.cli"
 })
 public class AgencyRestApplication {

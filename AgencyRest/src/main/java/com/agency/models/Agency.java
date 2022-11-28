@@ -3,10 +3,13 @@ package com.agency.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Agency {
@@ -15,7 +18,8 @@ public class Agency {
 	@Column(name = "id")
 	private long id;
 	private String agencyName;
-//	private List<Offers> offers;
+	@OneToMany(mappedBy="agency", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	private List<Offers> offers;
 	
 	
 	public long getId() {
@@ -30,22 +34,22 @@ public class Agency {
 	public void setAgencyName(String agencyName) {
 		this.agencyName = agencyName;
 	}
-//
-//	public List<Offers> getOffers() {
-//		return offers;
-//	}
-//	public void setOffers(List<Offers> offers) {
-//		this.offers = offers;
-//	}
+
+	public List<Offers> getOffers() {
+		return offers;
+	}
+	public void setOffers(List<Offers> offers) {
+		this.offers = offers;
+	}
 
 	
 	public Agency(String agencyName, List<Offers> offers) {
 		this.agencyName = agencyName;
-//		this.offers = offers;
+		this.offers = offers;
 	}
 	public Agency() {
 		this.agencyName = "Hotel name";
-//		this.offers = new ArrayList<Offers>(); 
+		this.offers = new ArrayList<Offers>(); 
 	}
 	
 	public void quitAgency() {
@@ -54,9 +58,8 @@ public class Agency {
 	}
 	@Override
 	public String toString() {
-		return "Agency [agencyName=" + agencyName + ", offers="; //+ offers + "]";
+		return "Agency [agencyName=" + agencyName + ", offers=" + offers + "]";
 	}
 	
-	
-	
+
 }

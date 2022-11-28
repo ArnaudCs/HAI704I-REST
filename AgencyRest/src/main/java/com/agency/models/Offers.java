@@ -3,6 +3,8 @@ package com.agency.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Offers {
@@ -12,6 +14,8 @@ public class Offers {
 	private long numHotel;
 	private String uri;
 	private double amount;
+	@ManyToOne
+	@JoinColumn(name="agency_id")
 	private Agency agency;
 	
 	
@@ -40,10 +44,11 @@ public class Offers {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	public Offers(long numHotel, String uri, double amount) {
+	public Offers(long numHotel, String uri, double amount, Agency agency) {
 		this.numHotel = numHotel;
 		this.uri = uri;
 		this.amount = amount;
+		this.agency = agency;
 	}
 	public Offers() {
 		this.numHotel = 0;

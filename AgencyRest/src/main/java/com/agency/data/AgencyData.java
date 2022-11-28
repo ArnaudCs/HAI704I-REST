@@ -22,17 +22,17 @@ public class AgencyData {
 	public CommandLineRunner initDatabase(AgencyRepository repository) {
 		return args -> {
 			
+			Agency a1 = new Agency("HotelAdvisor", null);
 			List<Offers> offers = new ArrayList<Offers>();
-			Offers o1 = new Offers(1, "http://localhost:8080/crowne/api/", 10);
-			Offers o2 = new Offers(2, "http://localhost:8080/ritz/api/", 15);
-			Offers o3 = new Offers(3, "http://localhost:8080/ibis/api/", 5);
+			Offers o1 = new Offers(1, "http://localhost:8080/crowne/api/", 10, a1);
+			Offers o2 = new Offers(2, "http://localhost:8080/ritz/api/", 15, a1);
+			Offers o3 = new Offers(3, "http://localhost:8080/ibis/api/", 5, a1);
 			
 			offers.add(o1);
 			offers.add(o2);
 			offers.add(o3);
 			
-			
-			Agency a1 = new Agency("HotelAdvisor", null);
+			a1.setOffers(offers);
 			
 			logger.info("Loading database with " + repository.save(a1));
 		};
