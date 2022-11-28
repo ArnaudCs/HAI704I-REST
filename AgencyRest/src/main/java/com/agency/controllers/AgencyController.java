@@ -1,75 +1,23 @@
 package com.agency.controllers;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
+import java.util.List;
 
-import com.agency.exceptions.ReservationException;
-import com.agency.models.FirstPdf;
-import com.agency.models.Hotel;
-import com.agency.models.Reservation;
-import com.agency.models.Room;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.PdfWriter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.agency.models.Agency;
+import com.agency.repositories.AgencyRepository;
+
+@RestController
 public class AgencyController {
 	
-	@SuppressWarnings("unused")
-	public static Reservation makeReservation(BufferedReader reader, LocalDate in, LocalDate out, Room room, Hotel hotel, double amount) throws ReservationException {
-		Reservation resa = null;
-		try {
-			System.out.println("Firstname : ");
-			String firstname = reader.readLine();
-			System.out.println("Name : ");
-			String name = reader.readLine();
-			System.out.println("E-mail : ");
-			String mail = reader.readLine();
-			System.out.println("Phone number : ");
-			String phone = reader.readLine();
-			System.out.println("Card number : ");
-			String num = reader.readLine();
-			System.out.println("CVV number : ");
-			String cvv = reader.readLine();
-			System.out.println("Expiration date (yyyy-mm-dd) : ");
-			LocalDate exp = LocalDate.parse(reader.readLine());
-			resa = new Reservation(firstname + " " + name, in, out, amount, room, hotel);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		return resa;
+	@Autowired
+	private AgencyRepository repository;
+	private static final String uri = "agency/api";
+	
+	@GetMapping(uri + "/agency")
+	public List<Agency> getAllAgencies() {
+		return repository.findAll();
 	}
-	
-	
-	public static void getRecipe(Hotel hotel, String client, Reservation resa) {
-		int size = 31;  
-		System.out.println(Reservation.formRecipe(size, "Client Infos"));
-		System.out.println("|                             |");
-		System.out.println(Reservation.adaptiveDisplay("info", client, size));
-		System.out.println("|                             |");
-		System.out.println(Reservation.formRecipe(size, "Reservation Infos"));
-		System.out.println("|                             |");
-		System.out.println(Reservation.adaptiveDisplay("hotelName", hotel.getName(), size));
-		System.out.println(Reservation.adaptiveDisplay("room", String.valueOf(resa.getRoom().getRoomNumber()), size));
-		System.out.println(Reservation.adaptiveDisplay("datein", String.valueOf(resa.getIn()), size));
-		System.out.println(Reservation.adaptiveDisplay("dateout", String.valueOf(resa.getOut()), size));
-		System.out.println(Reservation.adaptiveDisplay("price", String.valueOf(Double.parseDouble(new DecimalFormat("##.##").format(resa.getRoom().getPrice())))+"€", size));
-		System.out.println(Reservation.formRecipe(size, "footer"));
-		System.out.println("A PDF have been sent to " + System.getProperty("user.dir") +"/Reservation.pdf");
-	}
-	
-	public static void makePdf(Hotel hotel, String client, Reservation resa) {
-		try {
-            Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream(FirstPdf.FILE));
-            document.open();
-            FirstPdf.addMetaData(document);
-            FirstPdf.addTitlePage(document, hotel, client, resa);
-            document.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-	}
-	
 }

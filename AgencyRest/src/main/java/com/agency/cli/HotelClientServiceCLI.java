@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.agency.controllers.AgencyController;
 import com.agency.exceptions.ReservationException;
+import com.agency.functions.MainFunctions;
 import com.agency.models.Hotel;
 import com.agency.models.Reservation;
 import com.agency.models.Room;
@@ -44,7 +44,8 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 			URIS = new HashMap<String, String>();
 			URIS.put(SERVICE_URL1 + "hotels", SERVICE_URL1 + URI_HOTEL_ID);
 			URIS.put(SERVICE_URL2 + "hotels", SERVICE_URL2 + URI_HOTEL_ID);
-//			URIS.put(SERVICE_URL3 + "hotels", SERVICE_URL3 + URI_HOTEL_ID);
+			URIS.put(SERVICE_URL3 + "hotels", SERVICE_URL3 + URI_HOTEL_ID);
+			URIS.put(SERVICE_URL4 + "hotels", SERVICE_URL4 + URI_HOTEL_ID);
 			do {
 				menu();
 				userInput = inputReader.readLine();
@@ -160,15 +161,15 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 					try {
 						Hotel selectedHotel = resultHotel.get(hotelChoice-1);
 						Room selectedRoom = selectedHotel.getRooms().get(roomChoice-1);
-						Reservation resa = AgencyController.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
+						Reservation resa = MainFunctions.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
 						selectedHotel.setResa(new ArrayList<Reservation>());
 						selectedHotel.getResa().add(resa);
 						params.put("id", String.valueOf(selectedHotel.getId()));
 						String uriID = URIS.get(uriList.get(hotelChoice-1));
 						proxy.put(uriID, selectedHotel, params);
 						System.out.println("Your order have been placed. Thank you for your purchase !\n");
-						AgencyController.getRecipe(selectedHotel, resa.getClient(), resa);
-						AgencyController.makePdf(selectedHotel, resa.getClient(), resa);
+						MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
+						MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);
 						
 					} catch (ReservationException e) {
 						e.printStackTrace();
