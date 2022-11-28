@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.hotel.exceptions.HotelNotFoundException;
 import com.hotel.models.Hotel;
@@ -33,7 +32,7 @@ public class HotelController {
 	@Autowired
 	private HotelRepository repository;
 	private static final String uri = "crowne/api";
-
+	
 	@GetMapping(uri + "/hotels")
 	public List<Hotel> getAllHotels() {
 		return repository.findAll();
