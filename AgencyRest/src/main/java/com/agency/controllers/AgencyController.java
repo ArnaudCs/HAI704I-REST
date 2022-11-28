@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.agency.models.Agency;
 import com.agency.repositories.AgencyRepository;
-import com.hotel.exceptions.HotelNotFoundException;
-import com.hotel.models.Hotel;
+//import com.agency.exceptions.HotelNotFoundException;
+import com.agency.models.Hotel;
 
 @RestController
 public class AgencyController {
@@ -27,13 +27,13 @@ public class AgencyController {
 		return repository.findAll();
 	}
 	
-	@RequestMapping(
-			  value = uri + "/agency/{id}/search", 
-			  params = { "position", "size", "rating", "datein", "dateout", "price" }, 
-			  method = RequestMethod.GET)
-	@ResponseBody
-	public Hotel searchHotel(@RequestParam("position") String position, @RequestParam("size") int size, @RequestParam("rating") double rating, 
-			@RequestParam("datein") String datein, @RequestParam("dateout") String dateout, @RequestParam("price") double price) {
-	
-	}
+//	@RequestMapping(
+//			  value = uri + "/agency/{id}/search", 
+//			  params = { "position", "size", "rating", "datein", "dateout", "price" }, 
+//			  method = RequestMethod.GET)
+//	@ResponseBody
+//	public Hotel searchHotel(@RequestParam("position") String position, @RequestParam("size") int size, @RequestParam("rating") double rating, 
+//			@RequestParam("datein") String datein, @RequestParam("dateout") String dateout, @RequestParam("price") double price) {
+//	
+//	}
 }

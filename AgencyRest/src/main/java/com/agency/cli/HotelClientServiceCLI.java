@@ -3,6 +3,7 @@ package com.agency.cli;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,16 +83,27 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 			case "1":
 				int x = 0;
 				for (String uri : URIS.keySet()) {
-					String uriCount = uri + "/count";
-					ObjectMapper mapper = new ObjectMapper();
-					String countStr = proxy.getForObject(uriCount, String.class);
-					long count = (int)mapper.readValue(countStr, Map.class).get("count");
-					x += count;
+					try {
+						String uriCount = uri + "/count";
+						ObjectMapper mapper = new ObjectMapper();
+						String countStr = proxy.getForObject(uriCount, String.class);
+						long count = (int)mapper.readValue(countStr, Map.class).get("count");
+						x += count;						
+					}
+					catch (Exception e) {
+						continue;
+					}
 				}
 				System.out.println(String.format("There are %d hotels:", x));
 				for (String uri : URIS.keySet()) {
-					Hotel[] hotels = proxy.getForObject(uri, Hotel[].class);
-					Arrays.asList(hotels).forEach(System.out::println);
+					try {
+						Hotel[] hotels = proxy.getForObject(uri, Hotel[].class);
+						Arrays.asList(hotels).forEach(System.out::println);						
+					}
+					
+					catch (Exception e) {
+						continue;
+					}
 				}
 				break;
 
@@ -120,18 +132,23 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 				ArrayList<String> uriList = new ArrayList<>();
 				System.out.println("Results:\n");
 				for (String uri : URIS.keySet()) {
-					String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
-					Hotel returnedHotel = proxy.getForObject(url, Hotel.class, params);
-					if(!returnedHotel.getName().equals("Undefined")) {
-						uriList.add(uri);
-						resultHotel.add(returnedHotel);
-						System.out.println("Hoten n°"+ String.valueOf(cpt));
-						cpt++;
-						System.out.println(returnedHotel.toString());
-						for (Room room: returnedHotel.getRooms()) {
-							System.out.println(room.toString());
+					try {
+						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
+						Hotel returnedHotel = proxy.getForObject(url, Hotel.class, params);
+						if(!returnedHotel.getName().equals("Undefined")) {
+							uriList.add(uri);
+							resultHotel.add(returnedHotel);
+							System.out.println("Hoten n°"+ String.valueOf(cpt));
+							cpt++;
+							System.out.println(returnedHotel.toString());
+							for (Room room: returnedHotel.getRooms()) {
+								System.out.println(room.toString());
+							}
+							System.out.println();						
 						}
-						System.out.println();						
+					}
+					catch (Exception e) {
+						continue;
 					}
 				}
 				
