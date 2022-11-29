@@ -4,10 +4,14 @@ compile:
 	(cd AgencyRest ; mvn compile )
 	(cd HotelRest ; mvn compile)
 	(cd RitzHotel ; mvn compile)
+	(cd Formule1 ; mvn compile)
+	(cd IbisWilson ; mvn compile)
 
 hotels:
 	(cd HotelRest ; mvn spring-boot:run&)
 	(cd RitzHotel ; mvn spring-boot:run&)
+	(cd Formule1 ; mvn spring-boot:run&)
+	(cd IbisWilson ; mvn spring-boot:run&)
 
 agency:
 	(cd AgencyRest ; mvn spring-boot:run)

@@ -138,7 +138,7 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 						if(!returnedHotel.getName().equals("Undefined")) {
 							uriList.add(uri);
 							resultHotel.add(returnedHotel);
-							System.out.println("Hoten n°"+ String.valueOf(cpt));
+							System.out.println("Hotel n°"+ String.valueOf(cpt));
 							cpt++;
 							System.out.println(returnedHotel.toString());
 							for (Room room: returnedHotel.getRooms()) {
