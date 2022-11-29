@@ -1,4 +1,4 @@
-package com.agency.cli;
+package com.comparator.cli;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,15 +16,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.agency.exceptions.ReservationException;
-import com.agency.functions.MainFunctions;
-import com.agency.models.Hotel;
-import com.agency.models.Reservation;
-import com.agency.models.Room;
+import com.comparator.exceptions.ReservationException;
+import com.comparator.functions.MainFunctions;
+import com.comparator.models.Agency;
+import com.comparator.models.Hotel;
+import com.comparator.models.Reservation;
+import com.comparator.models.Room;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class HotelClientServiceCLI extends AbstractMain implements CommandLineRunner {
+public class ComparatorClientServiceCLI extends AbstractMain implements CommandLineRunner {
 
 	@Autowired
 	private RestTemplate proxy;
@@ -39,13 +40,12 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 		try {
 			inputReader = new BufferedReader(new InputStreamReader(System.in));
 			setTestServiceUrl(inputReader);
-			URI_HOTEL = "hotels";
+			URI_HOTEL = "agency";
 			URI_HOTEL_ID = URI_HOTEL + "/{id}";
 			URIS = new HashMap<String, String>();
-			URIS.put(SERVICE_URL1 + "hotels", SERVICE_URL1 + URI_HOTEL_ID);
-			URIS.put(SERVICE_URL2 + "hotels", SERVICE_URL2 + URI_HOTEL_ID);
-			URIS.put(SERVICE_URL3 + "hotels", SERVICE_URL3 + URI_HOTEL_ID);
-			URIS.put(SERVICE_URL4 + "hotels", SERVICE_URL4 + URI_HOTEL_ID);
+			URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+			URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+			URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
 			do {
 				menu();
 				userInput = inputReader.readLine();
@@ -61,18 +61,13 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 	}
 
 	@Override
-	protected boolean validServiceUrl() {
-		return SERVICE_URL1.equals("http://localhost:8080/hotelservice/api");
-	}
-
-	@Override
 	protected void menu() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(QUIT+". Quit.");
 		builder.append("\n1. See all hotels");
 		builder.append("\n2. Search hotel");
-		builder.append("\n3. Make reservation");
-		System.out.println(builder);	
+		builder.append("\n3. See agencies");
+		System.out.println(builder);
 	}
 	
 	private void processUserInput(BufferedReader reader, String userInput, RestTemplate proxy) {
@@ -133,17 +128,19 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 				for (String uri : URIS.keySet()) {
 					try {
 						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
-						Hotel returnedHotel = proxy.getForObject(url, Hotel.class, params);
-						if(!returnedHotel.getName().equals("Undefined")) {
-							uriList.add(uri);
-							resultHotel.add(returnedHotel);
-							System.out.println("Hotel n°"+ String.valueOf(cpt));
-							cpt++;
-							System.out.println(returnedHotel.toString());
-							for (Room room: returnedHotel.getRooms()) {
-								System.out.println(room.toString());
-							}
-							System.out.println();						
+						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
+						for (Hotel hotel : returnedHotel) {
+							if(!hotel.getName().equals("Undefined")) {
+								uriList.add(uri);
+								resultHotel.add(hotel);
+								System.out.println("Hotel n°"+ String.valueOf(cpt));
+								cpt++;
+								System.out.println(hotel.toString());
+								for (Room room: hotel.getRooms()) {
+									System.out.println(room.toString());
+								}
+								System.out.println();						
+							}							
 						}
 					}
 					catch (Exception e) {
@@ -193,6 +190,21 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 					}					
 				}
 						
+				break;
+			case "3":
+				System.out.println("Agencies:");
+				
+				for (String uri : URIS.keySet()) {
+					try {
+						proxy.getForObject(uri, Agency[].class);
+						Agency[] agencies = proxy.getForObject(uri, Agency[].class); 
+						Arrays.asList(agencies).forEach(System.out::println);
+					}
+					catch(Exception e) {
+						continue;
+					}
+					System.out.println();
+				}
 				break;
 				
 			case QUIT:

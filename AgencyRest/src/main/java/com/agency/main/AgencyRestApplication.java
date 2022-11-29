@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 		"com.agency.controllers",
 		"com.agency.exceptions",
 		"com.agency.client",
-		"com.agency.cli"
+//		"com.agency.cli"
 })
 public class AgencyRestApplication {
 
