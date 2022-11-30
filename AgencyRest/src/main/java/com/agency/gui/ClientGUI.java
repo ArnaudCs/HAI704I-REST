@@ -1,13 +1,5 @@
 package com.agency.gui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.JLabel;
@@ -41,6 +33,7 @@ import javax.swing.JCheckBox;
 
 public class ClientGUI extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField destinationInput;
 	private JTextField personNumberInput;
