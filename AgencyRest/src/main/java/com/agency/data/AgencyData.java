@@ -24,9 +24,9 @@ public class AgencyData {
 			
 			Agency a1 = new Agency("Hotel.org", null);
 			List<Offers> offers = new ArrayList<Offers>();
-			Offers o1 = new Offers(1, "http://localhost:8080/crowne/api/hotels", 10, a1);
-			Offers o2 = new Offers(2, "http://localhost:8081/ritz/api/hotels", 15, a1);
-			Offers o3 = new Offers(3, "http://localhost:8082/ibis/api/hotels", 5, a1);
+			Offers o1 = new Offers(1, "http://localhost:30000/crowne/api/hotels", 10, a1);
+			Offers o2 = new Offers(2, "http://localhost:30001/ritz/api/hotels", 15, a1);
+			Offers o3 = new Offers(3, "http://localhost:30002/ibis/api/hotels", 5, a1);
 			
 			offers.add(o1);
 			offers.add(o2);
