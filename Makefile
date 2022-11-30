@@ -12,8 +12,6 @@ all: compile
 	(cd HotelScanner ; mvn spring-boot:run&)
 	echo "[BASH] Ready for use"
 
-
-
 compile:
 	echo "[BASH] Compiling projects"
 	(cd AgencyRest ; mvn compile)
