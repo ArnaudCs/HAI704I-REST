@@ -11,6 +11,7 @@ public class Reservation {
 	private LocalDate out;
 	private double amount;
 	private Room room;
+	@SuppressWarnings("unused")
 	private Hotel hotel;
 	
 	public long getId() {

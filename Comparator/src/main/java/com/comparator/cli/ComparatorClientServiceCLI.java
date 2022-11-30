@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,6 @@ import com.comparator.models.Agency;
 import com.comparator.models.Hotel;
 import com.comparator.models.Reservation;
 import com.comparator.models.Room;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class ComparatorClientServiceCLI extends AbstractMain implements CommandLineRunner {
@@ -77,29 +75,36 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 			switch(userInput) {
 			case "1":
 				int x = 0;
+				ArrayList<Hotel> hotels = new ArrayList<>();
+				
 				for (String uri : URIS.keySet()) {
 					try {
-						String uriCount = uri + "/count";
-						ObjectMapper mapper = new ObjectMapper();
-						String countStr = proxy.getForObject(uriCount, String.class);
-						long count = (int)mapper.readValue(countStr, Map.class).get("count");
-						x += count;						
+						Hotel[] returnedHotels= proxy.getForObject(uri + "/hotels", Hotel[].class);
+						for (Hotel hotel : returnedHotels) {
+							boolean check = true;
+							for (Hotel toCompare : hotels) {
+								if(hotel.getName().equals(toCompare.getName())) {
+									check = false;
+								}
+							}
+							if(check) {
+								hotels.add(hotel);
+								x++;
+							}
+						}
 					}
 					catch (Exception e) {
 						continue;
 					}
 				}
 				System.out.println(String.format("There are %d hotels:", x));
-				for (String uri : URIS.keySet()) {
-					try {
-						Hotel[] hotels = proxy.getForObject(uri, Hotel[].class);
-						Arrays.asList(hotels).forEach(System.out::println);						
-					}
-					
-					catch (Exception e) {
-						continue;
+				for (Hotel hotel : hotels) {
+					System.out.println(hotel.toString());
+					for (Room room : hotel.getRooms()) {
+						System.out.println(room.toString());
 					}
 				}
+
 				break;
 
 			case "2":

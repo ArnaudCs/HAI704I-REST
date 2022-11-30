@@ -22,7 +22,6 @@ import com.agency.models.Hotel;
 import com.agency.models.Offers;
 import com.agency.repositories.AgencyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.agency.models.Reservation;
 
 @RestController
 public class AgencyController {
@@ -62,7 +61,6 @@ public class AgencyController {
 	@PutMapping(uri + "/agency/resa/{id}")
 	public Hotel updateHotel(@RequestBody Hotel newHotel, @PathVariable long id) {
 		Agency agence = repository.findAll().get(0);
-		List<Hotel> toReturnHotels = new ArrayList<>();
 		HashMap<Long, String> URIS = new HashMap<Long, String>();
 		for (Offers offer: agence.getOffers()) {
 			URIS.put(offer.getNumHotel(), offer.getUri());
@@ -75,6 +73,29 @@ public class AgencyController {
 	@GetMapping(uri + "/agency")
 	public List<Agency> getAllAgencies() {
 		return repository.findAll();
+	}
+	
+	@GetMapping(uri + "/agency/hotels")
+	public List<Hotel> getAllHotels() {
+		Agency agence = repository.findAll().get(0);
+		ArrayList<String> URIS = new ArrayList<>();
+		for (Offers offer: agence.getOffers()) {
+			URIS.add(offer.getUri());
+		}
+		List<Hotel> hotels = new ArrayList<>();
+		for (String uri : URIS) {
+			try {
+				Hotel[] hotel = proxy.getForObject(uri, Hotel[].class);
+				for (Hotel hotel2 : hotel) {
+					hotels.add(hotel2);
+				}
+			}
+			catch (Exception e) {
+				continue;
+			}
+			
+		}
+		return hotels;
 	}
 	
 	@RequestMapping(

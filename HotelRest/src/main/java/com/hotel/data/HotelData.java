@@ -1,9 +1,7 @@
 package com.hotel.data;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.hotel.models.Hotel;
 import com.hotel.models.Position;
-import com.hotel.models.Reservation;
 import com.hotel.models.Room;
 import com.hotel.repositories.HotelRepository;
 
@@ -26,7 +23,6 @@ public class HotelData {
 	public CommandLineRunner initDatabase(HotelRepository repository) {
 		return args -> {
 			Hotel h1 = new Hotel("Crowne Plaza", 4.7, null, null, null, "http://hotelfinder.sc1samo7154.universe.wf/crowne/");
-			Set<Reservation> resa = new HashSet<Reservation>();
 			List<Room> rooms = new ArrayList<>();
 			Room r1 = new Room(1, 50, 1, h1);
 			Room r2 = new Room(2, 55, 1, h1);
