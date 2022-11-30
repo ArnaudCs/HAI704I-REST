@@ -139,35 +139,36 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 							if(!hotel.getName().equals("Undefined")) {
 								uriList.add(uri);
 								resultHotel.add(hotel);
-								System.out.println("Hotel n°"+ String.valueOf(cpt));
 								cpt++;
-								System.out.println(hotel.toString());
-								for (Room room: hotel.getRooms()) {
-									System.out.println(room.toString());
-								}
-								System.out.println();
-							}							
+							}
 						}
 					}
 					catch (Exception e) {
 						continue;
 					}
 				}
-//				List<Hotel> comparedHotel = new ArrayList<>(); 
-//				for (int i= 0; i < resultHotel.size() ; i++) {
-//					Hotel hotel = resultHotel.get(i);
-//					for (int j= 0; j < resultHotel.size() ; j++) {
-//						if(i != j) {
-//							Hotel toCompare = resultHotel.get(j);
-//							if(hotel.getName().equals(toCompare.getName())) {
-//								String uri1 = uriList.get(i);
-//								String uri2 = uriList.get(j);
-//								
-//							}
-//						}
-//					}
-//					
-//				}
+				for (int i= 0; i < resultHotel.size() ; i++) {
+					for (int j= 0; j < resultHotel.size() ; j++) {
+						if(i != j) {
+							Hotel hotel = resultHotel.get(i);
+							Hotel toCompare = resultHotel.get(j);
+							if(hotel.getName().equals(toCompare.getName())) {
+								resultHotel.remove(j);
+							}
+						}
+					}
+					
+				}
+
+				for (Hotel hotel : resultHotel) {
+					if(!hotel.getName().equals("Undefined")) {
+						System.out.println(hotel.toString());
+						for (Room room: hotel.getRooms()) {
+							System.out.println(room.toString());
+						}
+						System.out.println();
+					}
+				}
 				
 				System.out.println("Would you like to order one of these ?\n");
 				int hotelChoice = -1;

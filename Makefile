@@ -1,6 +1,21 @@
 all: compile
+	echo "[BASH] Starting 6 hotels"
+	(cd HotelRest ; mvn spring-boot:run&)
+	(cd RitzHotel ; mvn spring-boot:run&)
+	(cd Formule1 ; mvn spring-boot:run&)
+	(cd IbisWilson ; mvn spring-boot:run&)
+	(cd Kyriad ; mvn spring-boot:run&)
+	(cd FormuleMtp ; mvn spring-boot:run&)
+	echo "[BASH] Starting 3 agencies"
+	(cd AgencyRest ; mvn spring-boot:run&)
+	(cd TripFinder ; mvn spring-boot:run&)
+	(cd HotelScanner ; mvn spring-boot:run&)
+	echo "[BASH] Ready for use"
+
+
 
 compile:
+	echo "[BASH] Compiling projects"
 	(cd AgencyRest ; mvn compile)
 	(cd HotelRest ; mvn compile)
 	(cd RitzHotel ; mvn compile)
@@ -13,6 +28,7 @@ compile:
 	(cd FormuleMtp ; mvn compile)
 
 hotels:
+	echo "[BASH] Starting 6 hotels"
 	(cd HotelRest ; mvn spring-boot:run&)
 	(cd RitzHotel ; mvn spring-boot:run&)
 	(cd Formule1 ; mvn spring-boot:run&)
@@ -21,7 +37,8 @@ hotels:
 	(cd FormuleMtp ; mvn spring-boot:run&)
 
 agencies:
-	(cd AgencyRest ; mvn spring-boot:run)
+	echo "[BASH] Starting 3 agencies"
+	(cd AgencyRest ; mvn spring-boot:run&)
 	(cd TripFinder ; mvn spring-boot:run&)
 	(cd HotelScanner ; mvn spring-boot:run&)
 

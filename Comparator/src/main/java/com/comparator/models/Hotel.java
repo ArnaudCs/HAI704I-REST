@@ -87,7 +87,7 @@ public class Hotel {
 	}
 	@Override
 	public String toString() {
-		return "|- "+ name + "\n" + "|- Rating : " + stars + "\n" + "|- Address/" + address +"\nSee the hotel in pictures: "+ this.getImageFolder();
+		return "|- "+ name + "\n" + "|- Rating : " + stars + "\n" + "|- Address/" + address +"See the hotel in pictures: "+ this.getImageFolder() + "\n";
 	}
 	@Override
 	public int hashCode() {
