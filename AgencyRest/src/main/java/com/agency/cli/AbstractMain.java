@@ -12,10 +12,10 @@ public abstract class AbstractMain {
 	
 	protected void setTestServiceUrl(BufferedReader inputReader) throws IOException {
 //		System.out.println("Provide URL to the WebService");
-		SERVICE_URL1 = "http://localhost:8080/crowne/api/";
-		SERVICE_URL2 = "http://localhost:8081/ritz/api/";
-		SERVICE_URL3 = "http://localhost:8082/ibis/api/";
-		SERVICE_URL4 = "http://localhost:8083/formule/api/";
+		SERVICE_URL1 = "http://localhost:30000/crowne/api/";
+		SERVICE_URL2 = "http://localhost:30001/ritz/api/";
+		SERVICE_URL3 = "http://localhost:30002/ibis/api/";
+		SERVICE_URL4 = "http://localhost:30003/formule/api/";
 		
 //		while(!validServiceUrl()) {
 //			System.err.println("Error: "+ SERVICE_URL + " is not a valid REST URL. Try again: ");
