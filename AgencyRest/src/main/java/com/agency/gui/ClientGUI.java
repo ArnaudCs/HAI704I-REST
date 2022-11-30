@@ -42,7 +42,6 @@ import javax.swing.JCheckBox;
 public class ClientGUI extends JFrame {
 
 	private JPanel contentPane;
-	private JPanel contentPaneSearch;
 	private JTextField destinationInput;
 	private JTextField personNumberInput;
 	private JTextField priceSelectedMax;
@@ -77,11 +76,7 @@ public class ClientGUI extends JFrame {
 		setBounds(100, 100, 1143, 743);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
-		
-		contentPaneSearch = new JPanel();
-		contentPaneSearch.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		JComboBox starsSelector = new JComboBox();
 		starsSelector.setBounds(580, 320, 148, 24);
@@ -111,7 +106,7 @@ public class ClientGUI extends JFrame {
 		backCover.setIcon(new ImageIcon(img6));
 		
 		backCover.setBounds(-14, 650, 180, 40);
-		contentPaneSearch.add(backCover);
+		contentPane.add(backCover);
 		backCover.setVisible(false);
 		
 		JCheckBox AgencyCheck1 = new JCheckBox("TripFinder");
@@ -305,45 +300,39 @@ public class ClientGUI extends JFrame {
 				
 				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
 					errorMessage.setText("Veuillez selectionner au moins une agence");
+				} else {
+					errorMessage.setVisible(false);
+					destinationInput.setVisible(false);
+					homeMessage.setVisible(false);
+					titleLabel.setVisible(false);
+					titleSeparator.setVisible(false);
+					destinationCover.setVisible(false);
+					destinationInput.setVisible(false);
+					personNumberLabel.setVisible(false);
+					personNumberInput.setVisible(false);
+					personNumberSelector.setVisible(false);
+					quitCover.setVisible(false);
+					exitBtn.setVisible(false);
+					starsSelector.setVisible(false);
+					starsNumberLabel.setVisible(false);
+					priceLabel.setVisible(false);
+					priceSelector.setVisible(false);
+					priceSelectedMax.setVisible(false);
+					departureLabel.setVisible(false);
+					returnDateLabel.setVisible(false);
+					dateIn.setVisible(false);
+					dateOut.setVisible(false);
+					dateInCover.setVisible(false);
+					dateOutCover.setVisible(false);
+					searchButtonBackground.setVisible(false);
+					searchButton.setVisible(false);
+					AgencyCheck1.setVisible(false);
+					AgencyCheck2.setVisible(false);
+					AgencyCheck3.setVisible(false);
+					chooseAgencyLabel.setVisible(false);
+					backButton.setVisible(true);
+					backCover.setVisible(true);
 				}
-				
-				/*errorMessage.setVisible(false);
-				destinationInput.setVisible(false);
-				homeMessage.setVisible(false);
-				titleLabel.setVisible(false);
-				titleSeparator.setVisible(false);
-				destinationCover.setVisible(false);
-				destinationInput.setVisible(false);
-				personNumberLabel.setVisible(false);
-				personNumberInput.setVisible(false);
-				personNumberSelector.setVisible(false);
-				quitCover.setVisible(false);
-				exitBtn.setVisible(false);
-				starsSelector.setVisible(false);
-				starsNumberLabel.setVisible(false);
-				priceLabel.setVisible(false);
-				priceSelector.setVisible(false);
-				priceSelectedMax.setVisible(false);
-				departureLabel.setVisible(false);
-				returnDateLabel.setVisible(false);
-				dateIn.setVisible(false);
-				dateOut.setVisible(false);
-				dateInCover.setVisible(false);
-				dateOutCover.setVisible(false);
-				searchButtonBackground.setVisible(false);
-				searchButton.setVisible(false);
-				AgencyCheck1.setVisible(false);
-				AgencyCheck2.setVisible(false);
-				AgencyCheck3.setVisible(false);
-				chooseAgencyLabel.setVisible(false);
-				backButton.setVisible(true);
-				backCover.setVisible(true);
-				contentPane.setVisible(false);*/
-				contentPane.removeAll();
-				contentPane.add(contentPaneSearch);
-				contentPane.revalidate(); 
-				contentPane.repaint();
-			
 			}
 		});
 		
@@ -399,7 +388,7 @@ public class ClientGUI extends JFrame {
 		
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*errorMessage.setVisible(true);
+				errorMessage.setVisible(true);
 				destinationInput.setVisible(true);
 				homeMessage.setVisible(true);
 				titleLabel.setVisible(true);
@@ -430,14 +419,14 @@ public class ClientGUI extends JFrame {
 				chooseAgencyLabel.setVisible(true);
 				backButton.setVisible(false);
 				backCover.setVisible(false);
-				errorMessage.setText("");*/
+				errorMessage.setText("");
 				
 			}
 		});
 		backButton.setContentAreaFilled(false);
 		backButton.setBorderPainted(false);
 		backButton.setBounds(42, 650, 74, 40);
-		contentPaneSearch.add(backButton);
+		contentPane.add(backButton);
 		backButton.setVisible(false);
 
 		JLabel background = new JLabel("");
@@ -457,6 +446,6 @@ public class ClientGUI extends JFrame {
 		backgroundSearch.setBounds(0, 5, 1142, 709);
 		backgroundSearch.setFont(new Font("Tahoma", Font.BOLD, 14));
 		backgroundSearch.setIcon(new ImageIcon(img));
-		contentPaneSearch.add(backgroundSearch);
+		contentPane.add(backgroundSearch);
 	}
 }
