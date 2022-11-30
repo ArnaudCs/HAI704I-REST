@@ -11,6 +11,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.JLabel;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import java.awt.Font;
@@ -25,6 +26,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JProgressBar;
@@ -37,6 +42,7 @@ import javax.swing.JCheckBox;
 public class ClientGUI extends JFrame {
 
 	private JPanel contentPane;
+	private JPanel contentPaneSearch;
 	private JTextField destinationInput;
 	private JTextField personNumberInput;
 	private JTextField priceSelectedMax;
@@ -66,15 +72,6 @@ public class ClientGUI extends JFrame {
 	public ClientGUI() {
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\logo.png"));
-		Border whiteline, raisedetched, loweredetched,
-	       raisedbevel, loweredbevel, empty;
-
-		whiteline = BorderFactory.createLineBorder(Color.white);
-		raisedetched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
-		loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		raisedbevel = BorderFactory.createRaisedBevelBorder();
-		loweredbevel = BorderFactory.createLoweredBevelBorder();
-		empty = BorderFactory.createEmptyBorder();
 		setTitle("HotelAdvisor - Comparateur");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1143, 743);
@@ -82,6 +79,9 @@ public class ClientGUI extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
+		
+		contentPaneSearch = new JPanel();
+		contentPaneSearch.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		JComboBox starsSelector = new JComboBox();
 		starsSelector.setBounds(580, 320, 148, 24);
@@ -100,26 +100,31 @@ public class ClientGUI extends JFrame {
 		chooseAgencyLabel.setBounds(450, 89, 240, 42);
 		contentPane.add(chooseAgencyLabel);
 		
-		
-		
-		
 		JLabel backCover = new JLabel("");
-		backCover.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\back.png"));
+		BufferedImage img6 = null;
+		try {
+			img6 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/back.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		backCover.setIcon(new ImageIcon(img6));
+		
 		backCover.setBounds(-14, 650, 180, 40);
-		contentPane.add(backCover);
+		contentPaneSearch.add(backCover);
 		backCover.setVisible(false);
 		
 		JCheckBox AgencyCheck1 = new JCheckBox("TripFinder");
 		AgencyCheck1.setFont(new Font("Tahoma", Font.BOLD, 14));
 		AgencyCheck1.setForeground(new Color(255, 255, 255));
-		AgencyCheck1.setBounds(373, 130, 135, 21);
+		AgencyCheck1.setBounds(353, 130, 135, 21);
 		contentPane.add(AgencyCheck1);
 		AgencyCheck1.setOpaque(false);
 		
 		AgencyCheck2 = new JCheckBox("Hotel.org");
 		AgencyCheck2.setForeground(new Color(255, 255, 255));
 		AgencyCheck2.setFont(new Font("Tahoma", Font.BOLD, 14));
-		AgencyCheck2.setBounds(527, 130, 117, 21);
+		AgencyCheck2.setBounds(510, 130, 117, 21);
 		contentPane.add(AgencyCheck2);
 		AgencyCheck2.setOpaque(false);
 		
@@ -141,10 +146,6 @@ public class ClientGUI extends JFrame {
 		JSeparator titleSeparator = new JSeparator();
 		titleSeparator.setBounds(440, 80, 257, 10);
 		titleSeparator.setForeground(new Color(255, 255, 255));
-		TitledBorder title;
-		title = BorderFactory.createTitledBorder(
-		                       whiteline, "Destination");
-		title.setTitleJustification(TitledBorder.CENTER);
 		
 		destinationInput = new JTextField();
 		destinationInput.setBounds(429, 202, 323, 28);
@@ -156,10 +157,17 @@ public class ClientGUI extends JFrame {
 		
 		JLabel destinationCover = new JLabel("");
 		destinationCover.setBounds(385, 188, 380, 57);
-		destinationCover.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\SearchBar.png"));
+		BufferedImage img5 = null;
+		try {
+			img5 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/SearchBar.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		destinationCover.setIcon(new ImageIcon(img5));
 		
 		personNumberInput = new JTextField();
-		personNumberInput.setBounds(545, 255, 28, 36);
+		personNumberInput.setBounds(555, 255, 28, 36);
 		personNumberInput.setText("1");
 		personNumberInput.setForeground(new Color(255, 255, 255));
 		personNumberInput.setFont(new Font("Tahoma", Font.BOLD, 17));
@@ -175,6 +183,7 @@ public class ClientGUI extends JFrame {
 		contentPane.add(errorMessage);
 		
 		JSlider priceSelector = new JSlider();
+		priceSelector.setMinimum(10);
 		priceSelector.setBounds(560, 376, 200, 22);
 		priceSelector.setMaximum(1000);
 		priceSelector.setOpaque(false);
@@ -186,6 +195,7 @@ public class ClientGUI extends JFrame {
 		 });
 		
 		JSlider personNumberSelector = new JSlider();
+		personNumberSelector.setMinimum(1);
 		personNumberSelector.setBounds(585, 263, 200, 22);
 		personNumberSelector.setValue(2);
 		personNumberSelector.setOpaque(false);
@@ -205,10 +215,17 @@ public class ClientGUI extends JFrame {
 		
 		JLabel searchButtonBackground = new JLabel("");
 		searchButtonBackground.setBounds(485, 575, 180, 40);
-		searchButtonBackground.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\valider.png"));
+		BufferedImage img4 = null;
+		try {
+			img4 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/valider.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		searchButtonBackground.setIcon(new ImageIcon(img4));
 		
 		JLabel personNumberLabel = new JLabel("Nombre de Personnes : ");
-		personNumberLabel.setBounds(349, 261, 207, 24);
+		personNumberLabel.setBounds(340, 261, 234, 24);
 		personNumberLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		personNumberLabel.setForeground(new Color(255, 255, 255));
 		
@@ -219,11 +236,25 @@ public class ClientGUI extends JFrame {
 		
 		JLabel dateInCover = new JLabel("");
 		dateInCover.setBounds(580, 429, 140, 40);
-		dateInCover.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\calendarV1.png"));
+		BufferedImage img3 = null;
+		try {
+			img3 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/calendarV1.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		dateInCover.setIcon(new ImageIcon(img3));
 		
 		JLabel dateOutCover = new JLabel("");
 		dateOutCover.setBounds(580, 490, 140, 40);
-		dateOutCover.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\calendarV1.png"));
+		BufferedImage img2 = null;
+		try {
+			img2 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/calendarV1.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		dateOutCover.setIcon(new ImageIcon(img2));
 		
 		JLabel departureLabel = new JLabel("Date de départ");
 		departureLabel.setBounds(435, 440, 167, 24);
@@ -237,7 +268,14 @@ public class ClientGUI extends JFrame {
 		
 		JLabel quitCover = new JLabel("");
 		quitCover.setBounds(962, 650, 180, 40);
-		quitCover.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\QuitRest.png"));
+		BufferedImage img1 = null;
+		try {
+			img1 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/QuitRest.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		quitCover.setIcon(new ImageIcon(img1));
 		
 		JButton exitBtn = new JButton("");
 		exitBtn.setBounds(1021, 650, 74, 40);
@@ -269,7 +307,7 @@ public class ClientGUI extends JFrame {
 					errorMessage.setText("Veuillez selectionner au moins une agence");
 				}
 				
-				errorMessage.setVisible(false);
+				/*errorMessage.setVisible(false);
 				destinationInput.setVisible(false);
 				homeMessage.setVisible(false);
 				titleLabel.setVisible(false);
@@ -300,6 +338,12 @@ public class ClientGUI extends JFrame {
 				chooseAgencyLabel.setVisible(false);
 				backButton.setVisible(true);
 				backCover.setVisible(true);
+				contentPane.setVisible(false);*/
+				contentPane.removeAll();
+				contentPane.add(contentPaneSearch);
+				contentPane.revalidate(); 
+				contentPane.repaint();
+			
 			}
 		});
 		
@@ -355,7 +399,7 @@ public class ClientGUI extends JFrame {
 		
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				errorMessage.setVisible(true);
+				/*errorMessage.setVisible(true);
 				destinationInput.setVisible(true);
 				homeMessage.setVisible(true);
 				titleLabel.setVisible(true);
@@ -386,19 +430,33 @@ public class ClientGUI extends JFrame {
 				chooseAgencyLabel.setVisible(true);
 				backButton.setVisible(false);
 				backCover.setVisible(false);
-				errorMessage.setText("");
+				errorMessage.setText("");*/
+				
 			}
 		});
 		backButton.setContentAreaFilled(false);
 		backButton.setBorderPainted(false);
 		backButton.setBounds(42, 650, 74, 40);
-		contentPane.add(backButton);
+		contentPaneSearch.add(backButton);
 		backButton.setVisible(false);
 
 		JLabel background = new JLabel("");
 		background.setBounds(0, 5, 1142, 709);
 		background.setFont(new Font("Tahoma", Font.BOLD, 14));
-		background.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\background.jpg"));
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/background.jpg"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		background.setIcon(new ImageIcon(img));
 		contentPane.add(background);
+		
+		JLabel backgroundSearch = new JLabel("");
+		backgroundSearch.setBounds(0, 5, 1142, 709);
+		backgroundSearch.setFont(new Font("Tahoma", Font.BOLD, 14));
+		backgroundSearch.setIcon(new ImageIcon(img));
+		contentPaneSearch.add(backgroundSearch);
 	}
 }
