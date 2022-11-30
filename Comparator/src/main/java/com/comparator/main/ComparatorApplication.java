@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"com.comparator.models",
 		"com.comparator.client",
 		"com.comparator.cli",
+		"com.comparator.gui"
 })
 public class ComparatorApplication {
 

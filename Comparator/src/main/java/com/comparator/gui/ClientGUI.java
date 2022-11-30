@@ -1,7 +1,24 @@
-package com.agency.gui;
+package com.comparator.gui;
 
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import com.comparator.models.Hotel;
+import com.comparator.models.Room;
+
 import javax.swing.JLabel;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -12,14 +29,20 @@ import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import java.awt.Label;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JMenuBar;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.awt.event.ActionEvent;
@@ -30,10 +53,10 @@ import java.awt.Toolkit;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JCheckBox;
-
-public class ClientGUI extends JFrame {
-
-	private static final long serialVersionUID = 1L;
+@Component
+public class ClientGUI extends JFrame implements CommandLineRunner{
+	@Autowired
+	private RestTemplate proxy;
 	private JPanel contentPane;
 	private JTextField destinationInput;
 	private JTextField personNumberInput;
@@ -76,17 +99,48 @@ public class ClientGUI extends JFrame {
 		starsSelector.setForeground(new Color(64, 0, 64));
 		starsSelector.setModel(new DefaultComboBoxModel(new String[] {"1 étoile (★)", "2 étoiles (★★)", "3 étoiles (★★★)", "4 étoiles (★★★★)", "5 étoiles (★★★★★)"}));
 		
-		JLabel starsNumberLabel = new JLabel("Nombre d'étoiles");
-		starsNumberLabel.setBounds(420, 322, 182, 24);
-		starsNumberLabel.setForeground(Color.WHITE);
-		starsNumberLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		
 		JLabel chooseAgencyLabel = new JLabel("Regarder sur :");
 		chooseAgencyLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		chooseAgencyLabel.setForeground(Color.WHITE);
 		chooseAgencyLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		chooseAgencyLabel.setBounds(450, 89, 240, 42);
 		contentPane.add(chooseAgencyLabel);
+		
+		JLabel bestPriceHotel = new JLabel("Crowne Plaza Hotel");
+		bestPriceHotel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		bestPriceHotel.setBounds(320, 46, 213, 21);
+		contentPane.add(bestPriceHotel);
+		bestPriceHotel.setVisible(false);
+		
+		JLabel bestRateHotel = new JLabel("Ritz");
+		bestRateHotel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		bestRateHotel.setBounds(866, 46, 213, 21);
+		contentPane.add(bestRateHotel);
+		bestRateHotel.setVisible(false);
+		
+		JLabel bestRateAgence = new JLabel("hotel.org");
+		bestRateAgence.setFont(new Font("Tahoma", Font.BOLD, 15));
+		bestRateAgence.setBounds(924, 76, 117, 21);
+		contentPane.add(bestRateAgence);
+		bestRateAgence.setVisible(false);
+		
+		JLabel bestPriceAgence = new JLabel("HotelScanner");
+		bestPriceAgence.setFont(new Font("Tahoma", Font.BOLD, 15));
+		bestPriceAgence.setBounds(360, 76, 117, 21);
+		contentPane.add(bestPriceAgence);
+		bestPriceAgence.setVisible(false);
+		
+		JLabel bestPricePrix = new JLabel("10");
+		bestPricePrix.setFont(new Font("Tahoma", Font.BOLD, 16));
+		bestPricePrix.setBounds(250, 76, 35, 21);
+		contentPane.add(bestPricePrix);
+		bestPricePrix.setVisible(false);
+		
+		JLabel bestRateStars = new JLabel("4");
+		bestRateStars.setFont(new Font("Tahoma", Font.BOLD, 17));
+		bestRateStars.setBounds(810, 75, 35, 21);
+		contentPane.add(bestRateStars);
+		bestRateStars.setVisible(false);
 		
 		JLabel backCover = new JLabel("");
 		BufferedImage img6 = null;
@@ -175,6 +229,32 @@ public class ClientGUI extends JFrame {
 		priceSelector.setBounds(560, 376, 200, 22);
 		priceSelector.setMaximum(1000);
 		priceSelector.setOpaque(false);
+		
+		JLabel topPrice = new JLabel("");
+		topPrice.setBounds(35, 31, 510, 90);
+		contentPane.add(topPrice);
+		BufferedImage img8 = null;
+		try {
+			img8 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/bestPrice.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		topPrice.setIcon(new ImageIcon(img8));
+		topPrice.setVisible(false);
+		
+		JLabel topStars = new JLabel("");
+		topStars.setBounds(580, 31, 510, 90);
+		contentPane.add(topStars);
+		BufferedImage img9 = null;
+		try {
+			img9 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/bestRate_2.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		topStars.setIcon(new ImageIcon(img9));
+		topStars.setVisible(false);
 		
 		priceSelector.addChangeListener(new ChangeListener() {
 	        public void stateChanged(ChangeEvent ce) {
@@ -276,6 +356,12 @@ public class ClientGUI extends JFrame {
 		exitBtn.setBorderPainted(false);
 		JButton backButton = new JButton("");
 		
+		JLabel starsNumberLabel = new JLabel("Nombre d'étoiles");
+		starsNumberLabel.setBounds(420, 322, 182, 24);
+		starsNumberLabel.setForeground(Color.WHITE);
+		starsNumberLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+		contentPane.add(starsNumberLabel);
+		
 		personNumberSelector.addChangeListener(new ChangeListener() {
 	        public void stateChanged(ChangeEvent ce) {
 	        	personNumberInput.setText(String.valueOf(personNumberSelector.getValue()));
@@ -284,16 +370,77 @@ public class ClientGUI extends JFrame {
 		
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				String SERVICE_URL1 = "http://localhost:30007/hotelorg/api/";
+				String SERVICE_URL2 = "http://localhost:30008/hotelscanner/api/";
+				String SERVICE_URL3 = "http://localhost:30009/tripfinder/api/";
+				
+				String URI_HOTEL = "agency";
+				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
+				Map<String, String> URIS = new HashMap<String, String>();
+				URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+				URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+				URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+				
 				String destination = destinationInput.getText();
 				String DateIn = dateIn.getText();
 				String DateOut = dateOut.getText();
 				int price = Integer.valueOf(priceSelector.getValue());;
 				int bedNumber = Integer.valueOf(personNumberInput.getText());
 				int stars = starsSelector.getSelectedIndex() + 1;
+				Map<String, String> params = new HashMap<>();
+				params.put("position", destination);
+				params.put("datein", DateIn);
+				params.put("dateout", DateOut);
+				params.put("size", String.valueOf(bedNumber));
+				params.put("rating", String.valueOf(stars));
+				params.put("price", String.valueOf(price));
 				
 				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
 					errorMessage.setText("Veuillez selectionner au moins une agence");
-				} else {
+				} else if ((AgencyCheck1.isSelected()) && (AgencyCheck2.isSelected())&& (AgencyCheck3.isSelected())){
+					List<Hotel> resultHotel = new ArrayList<>(); 
+					int cpt = 1;
+					ArrayList<String> uriList = new ArrayList<>();
+					System.out.println("Results:\n");
+					for (String uri : URIS.keySet()) {
+						try {
+							String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
+							Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
+							for (Hotel hotel : returnedHotel) {
+								if(!hotel.getName().equals("Undefined")) {
+									uriList.add(uri);
+									resultHotel.add(hotel);
+									cpt++;
+								}
+							}
+						}
+						catch (Exception e) {
+							continue;
+						}
+					}
+					for (int i= 0; i < resultHotel.size() ; i++) {
+						for (int j= 0; j < resultHotel.size() ; j++) {
+							if(i != j) {
+								Hotel hotel = resultHotel.get(i);
+								Hotel toCompare = resultHotel.get(j);
+								if(hotel.getName().equals(toCompare.getName())) {
+									resultHotel.remove(j);
+								}
+							}
+						}
+						
+					}
+					
+					for (Hotel hotel : resultHotel) {
+						if(!hotel.getName().equals("Undefined")) {
+							System.out.println(hotel.toString());
+							for (Room room: hotel.getRooms()) {
+								System.out.println(room.toString());
+							}
+							System.out.println();
+						}
+					}
+					
 					errorMessage.setVisible(false);
 					destinationInput.setVisible(false);
 					homeMessage.setVisible(false);
@@ -325,6 +472,16 @@ public class ClientGUI extends JFrame {
 					chooseAgencyLabel.setVisible(false);
 					backButton.setVisible(true);
 					backCover.setVisible(true);
+					topPrice.setVisible(true);
+					topStars.setVisible(true);
+					bestRateAgence.setVisible(true);
+					bestRateHotel.setVisible(true);
+					bestRateStars.setVisible(true);
+					bestPriceHotel.setVisible(true);
+					bestPriceAgence.setVisible(true);
+					bestPricePrix.setVisible(true);
+				} else {
+					
 				}
 			}
 		});
@@ -356,8 +513,9 @@ public class ClientGUI extends JFrame {
 		dateOut.setText("2022-12-20");
 		contentPane.setLayout(null);
 		contentPane.add(starsSelector);
-		contentPane.add(starsNumberLabel);
 		contentPane.add(titleLabel);
+		
+		
 		contentPane.add(titleSeparator);
 		contentPane.add(destinationInput);
 		contentPane.add(destinationCover);
@@ -412,6 +570,14 @@ public class ClientGUI extends JFrame {
 				chooseAgencyLabel.setVisible(true);
 				backButton.setVisible(false);
 				backCover.setVisible(false);
+				topPrice.setVisible(false);
+				topStars.setVisible(false);
+				bestRateAgence.setVisible(false);
+				bestRateHotel.setVisible(false);
+				bestRateStars.setVisible(false);
+				bestPriceHotel.setVisible(false);
+				bestPriceAgence.setVisible(false);
+				bestPricePrix.setVisible(false);
 				errorMessage.setText("");
 				
 			}
@@ -440,5 +606,10 @@ public class ClientGUI extends JFrame {
 		backgroundSearch.setFont(new Font("Tahoma", Font.BOLD, 14));
 		backgroundSearch.setIcon(new ImageIcon(img));
 		contentPane.add(backgroundSearch);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		
 	}
 }
