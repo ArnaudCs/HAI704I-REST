@@ -7,6 +7,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,8 @@ import com.agency.models.Agency;
 import com.agency.models.Hotel;
 import com.agency.models.Offers;
 import com.agency.repositories.AgencyRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.agency.models.Reservation;
 
 @RestController
 public class AgencyController {
@@ -27,6 +32,45 @@ public class AgencyController {
 	private AgencyRepository repository;
 	private static final String uri = "hotelorg/api";
 	
+	@GetMapping(uri + "/agency/count")
+	public int getCountHotels() {
+		int x = 0;
+		Agency agence = repository.findAll().get(0);
+		ArrayList<String> URIS = new ArrayList<>();
+		for (Offers offer: agence.getOffers()) {
+			URIS.add(offer.getUri());
+		}
+		for (String uri : URIS) {
+			for (Offers offer: agence.getOffers()) {
+				URIS.add(offer.getUri());
+			}
+			try {
+				String uriCount = uri + "/count";
+				ObjectMapper mapper = new ObjectMapper();
+				String countStr = proxy.getForObject(uriCount, String.class);
+				long count = (int)mapper.readValue(countStr, Map.class).get("count");
+				x += count;						
+			}
+			catch (Exception e) {
+				continue;
+			}
+		}
+		return x;
+	}
+	
+	
+	@PutMapping(uri + "/agency/resa/{id}")
+	public Hotel updateHotel(@RequestBody Hotel newHotel, @PathVariable long id) {
+		Agency agence = repository.findAll().get(0);
+		List<Hotel> toReturnHotels = new ArrayList<>();
+		HashMap<Long, String> URIS = new HashMap<Long, String>();
+		for (Offers offer: agence.getOffers()) {
+			URIS.put(offer.getNumHotel(), offer.getUri());
+		}
+		String uri = URIS.get(id);
+		proxy.put(uri + "/" + String.valueOf(id), newHotel);
+		return newHotel;
+	}
 	
 	@GetMapping(uri + "/agency")
 	public List<Agency> getAllAgencies() {

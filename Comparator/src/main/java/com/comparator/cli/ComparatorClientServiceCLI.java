@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -139,7 +140,7 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 								for (Room room: hotel.getRooms()) {
 									System.out.println(room.toString());
 								}
-								System.out.println();						
+								System.out.println();
 							}							
 						}
 					}
@@ -147,7 +148,21 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 						continue;
 					}
 				}
-				
+//				List<Hotel> comparedHotel = new ArrayList<>(); 
+//				for (int i= 0; i < resultHotel.size() ; i++) {
+//					Hotel hotel = resultHotel.get(i);
+//					for (int j= 0; j < resultHotel.size() ; j++) {
+//						if(i != j) {
+//							Hotel toCompare = resultHotel.get(j);
+//							if(hotel.getName().equals(toCompare.getName())) {
+//								String uri1 = uriList.get(i);
+//								String uri2 = uriList.get(j);
+//								
+//							}
+//						}
+//					}
+//					
+//				}
 				
 				System.out.println("Would you like to order one of these ?\n");
 				int hotelChoice = -1;
@@ -175,11 +190,11 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 						Hotel selectedHotel = resultHotel.get(hotelChoice-1);
 						Room selectedRoom = selectedHotel.getRooms().get(roomChoice-1);
 						Reservation resa = MainFunctions.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
-						selectedHotel.setResa(new ArrayList<Reservation>());
+						selectedHotel.setResa(new ArrayList<>());
 						selectedHotel.getResa().add(resa);
-						params.put("id", String.valueOf(selectedHotel.getId()));
-						String uriID = URIS.get(uriList.get(hotelChoice-1));
-						proxy.put(uriID, selectedHotel, params);
+						String agencyURI = uriList.get(hotelChoice) + "/resa/" + String.valueOf(selectedHotel.getId());
+
+						proxy.put(agencyURI, selectedHotel);
 						System.out.println("Your order have been placed. Thank you for your purchase !\n");
 						MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
 						MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);
