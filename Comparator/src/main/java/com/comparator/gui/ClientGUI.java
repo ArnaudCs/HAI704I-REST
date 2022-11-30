@@ -1,13 +1,34 @@
 package com.comparator.gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
+import javax.swing.JSeparator;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -19,44 +40,8 @@ import org.springframework.web.client.RestTemplate;
 import com.comparator.models.Hotel;
 import com.comparator.models.Room;
 
-import javax.swing.JLabel;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import java.awt.Font;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import java.awt.Label;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+public class ClientGUI extends JFrame {
 
-import javax.swing.JMenuBar;
-import javax.swing.JComboBox;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.awt.event.ActionEvent;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JProgressBar;
-import javax.swing.JSlider;
-import java.awt.Toolkit;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JCheckBox;
-@Component
-public class ClientGUI extends JFrame implements CommandLineRunner{
-	@Autowired
-	private RestTemplate proxy;
 	private JPanel contentPane;
 	private JTextField destinationInput;
 	private JTextField personNumberInput;
@@ -64,27 +49,29 @@ public class ClientGUI extends JFrame implements CommandLineRunner{
 	private JTextField dateOut;
 	private JTextField dateIn;
 	private JCheckBox AgencyCheck2;
+	
+	
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ClientGUI frame = new ClientGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ClientGUI frame = new ClientGUI();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public ClientGUI() {
+	public ClientGUI(RestTemplate proxy) {
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\logo.png"));
 		setTitle("HotelAdvisor - Comparateur");
@@ -606,10 +593,5 @@ public class ClientGUI extends JFrame implements CommandLineRunner{
 		backgroundSearch.setFont(new Font("Tahoma", Font.BOLD, 14));
 		backgroundSearch.setIcon(new ImageIcon(img));
 		contentPane.add(backgroundSearch);
-	}
-
-	@Override
-	public void run(String... args) throws Exception {
-		
 	}
 }

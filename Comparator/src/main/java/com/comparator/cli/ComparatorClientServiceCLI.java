@@ -1,5 +1,6 @@
 package com.comparator.cli;
 
+import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.comparator.exceptions.ReservationException;
 import com.comparator.functions.MainFunctions;
+import com.comparator.gui.ClientGUI;
 import com.comparator.models.Agency;
 import com.comparator.models.Hotel;
 import com.comparator.models.Reservation;
@@ -38,20 +40,36 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 		String userInput = "";
 		try {
 			inputReader = new BufferedReader(new InputStreamReader(System.in));
-			setTestServiceUrl(inputReader);
+			//setTestServiceUrl(inputReader);
 			URI_HOTEL = "agency";
 			URI_HOTEL_ID = URI_HOTEL + "/{id}";
 			URIS = new HashMap<String, String>();
 			URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
 			URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
 			URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-			do {
-				menu();
-				userInput = inputReader.readLine();
-				processUserInput(inputReader, userInput, proxy);
-				
-			} while (!userInput.equals(QUIT));
-			System.exit(0);
+			System.out.println("How do you want to run the client ?\n1. GUI\n2. CLI");
+			int choice = Integer.parseInt(inputReader.readLine());
+			if(choice == 1) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ClientGUI frame = new ClientGUI(proxy);
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+			else {
+				do {
+					menu();
+					userInput = inputReader.readLine();
+					processUserInput(inputReader, userInput, proxy);
+					
+				} while (!userInput.equals(QUIT));
+				System.exit(0);
+			}
 		}
 		catch (IOException e) {
 			e.printStackTrace();
