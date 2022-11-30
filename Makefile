@@ -26,7 +26,7 @@ agencies:
 	(cd HotelScanner ; mvn spring-boot:run&)
 
 comparator:
-	(cd Comparator ; mvn spring-boot:run&)
+	(cd Comparator ; mvn spring-boot:run)
 
 gui:
 	(cd Client ; mvn exec:java@AgencyGUI)
