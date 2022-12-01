@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -39,6 +40,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.comparator.models.Hotel;
 import com.comparator.models.Room;
+
+import ch.qos.logback.core.boolex.Matcher;
 
 public class ClientGUI extends JFrame {
 
@@ -80,6 +83,19 @@ public class ClientGUI extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		
+		JComboBox hotelChoice = new JComboBox();
+		hotelChoice.setMaximumRowCount(30);
+		hotelChoice.setModel(new DefaultComboBoxModel(new String[] {}));
+		hotelChoice.setVisible(false);
+		hotelChoice.setBounds(103, 236, 269, 27);
+		contentPane.add(hotelChoice);
+
+		JComboBox roomChoice = new JComboBox();
+		roomChoice.setMaximumRowCount(30);
+		roomChoice.setVisible(false);
+		roomChoice.setBounds(103, 322, 269, 27);
+		contentPane.add(roomChoice);
 		
 		JComboBox starsSelector = new JComboBox();
 		starsSelector.setBounds(580, 320, 148, 24);
@@ -268,6 +284,36 @@ public class ClientGUI extends JFrame {
 		searchButton.setContentAreaFilled(false);
 		searchButton.setBorderPainted(false);
 		
+		JLabel chooseHotelLabel = new JLabel("- Choisissez l'hotel - ");
+		chooseHotelLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		chooseHotelLabel.setForeground(Color.WHITE);
+		chooseHotelLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		chooseHotelLabel.setBounds(120, 198, 234, 24);
+		contentPane.add(chooseHotelLabel);
+		chooseHotelLabel.setVisible(false);
+		
+		JLabel roomHotelImage = new JLabel("");
+		roomHotelImage.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\background.jpg"));
+		roomHotelImage.setBounds(510, 243, 570, 370);
+		contentPane.add(roomHotelImage);
+		roomHotelImage.setVisible(false);
+		
+		JLabel chooseRoomLabel = new JLabel("- Choisissez la chambre - ");
+		chooseRoomLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		chooseRoomLabel.setForeground(Color.WHITE);
+		chooseRoomLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		chooseRoomLabel.setBounds(80, 285, 319, 24);
+		contentPane.add(chooseRoomLabel);
+		chooseRoomLabel.setVisible(false);
+		
+		JLabel imagePreviewLabel = new JLabel("- Aperçu de la chambre - ");
+		imagePreviewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		imagePreviewLabel.setForeground(Color.WHITE);
+		imagePreviewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		imagePreviewLabel.setBounds(640, 200, 319, 24);
+		contentPane.add(imagePreviewLabel);
+		imagePreviewLabel.setVisible(false);
+		
 		JLabel searchButtonBackground = new JLabel("");
 		searchButtonBackground.setBounds(485, 575, 180, 40);
 		BufferedImage img4 = null;
@@ -316,6 +362,12 @@ public class ClientGUI extends JFrame {
 		departureLabel.setForeground(Color.WHITE);
 		departureLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		
+		JLabel simplePub = new JLabel("");
+		simplePub.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\banniere.png"));
+		simplePub.setBounds(35, 31, 1055, 90);
+		contentPane.add(simplePub);
+		simplePub.setVisible(false);
+		
 		JLabel returnDateLabel = new JLabel("Date de retour");
 		returnDateLabel.setBounds(435, 500, 138, 24);
 		returnDateLabel.setForeground(Color.WHITE);
@@ -349,6 +401,59 @@ public class ClientGUI extends JFrame {
 		starsNumberLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		contentPane.add(starsNumberLabel);
 		
+		JLabel roomSizeDisplay = new JLabel("");
+		roomSizeDisplay.setFont(new Font("Tahoma", Font.BOLD, 17));
+		roomSizeDisplay.setForeground(new Color(255, 255, 255));
+		roomSizeDisplay.setBackground(new Color(255, 255, 255));
+		roomSizeDisplay.setBounds(265, 473, 193, 48);
+		contentPane.add(roomSizeDisplay);
+		roomSizeDisplay.setVisible(false);
+		
+		JLabel roomPriceDisplay = new JLabel("");
+		roomPriceDisplay.setForeground(Color.WHITE);
+		roomPriceDisplay.setFont(new Font("Tahoma", Font.BOLD, 17));
+		roomPriceDisplay.setBackground(Color.WHITE);
+		roomPriceDisplay.setBounds(295, 531, 135, 48);
+		contentPane.add(roomPriceDisplay);
+		roomPriceDisplay.setVisible(false);
+		
+		JLabel roomNumberDisplay = new JLabel("");
+		roomNumberDisplay.setForeground(Color.WHITE);
+		roomNumberDisplay.setFont(new Font("Tahoma", Font.BOLD, 17));
+		roomNumberDisplay.setBackground(Color.WHITE);
+		roomNumberDisplay.setBounds(279, 415, 84, 48);
+		contentPane.add(roomNumberDisplay);
+		roomNumberDisplay.setVisible(false);
+		
+		JLabel roomNumberLabel = new JLabel("Numéro chambre :");
+		roomNumberLabel.setForeground(new Color(255, 255, 255));
+		roomNumberLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+		roomNumberLabel.setBounds(120, 416, 180, 48);
+		contentPane.add(roomNumberLabel);
+		roomNumberLabel.setVisible(false);
+		
+		JLabel roomSizeLabel = new JLabel("Nombre de lits  :");
+		roomSizeLabel.setForeground(Color.WHITE);
+		roomSizeLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+		roomSizeLabel.setBounds(120, 473, 180, 48);
+		contentPane.add(roomSizeLabel);
+		roomSizeLabel.setVisible(false);
+		
+		JLabel roomPriceLabel = new JLabel("Prix de la chambre :");
+		roomPriceLabel.setForeground(Color.WHITE);
+		roomPriceLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+		roomPriceLabel.setBounds(120, 531, 180, 48);
+		contentPane.add(roomPriceLabel);
+		roomPriceLabel.setVisible(false);
+		
+		JLabel roomInfosLabel = new JLabel("- Informations chambre -");
+		roomInfosLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		roomInfosLabel.setForeground(Color.WHITE);
+		roomInfosLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		roomInfosLabel.setBounds(69, 376, 337, 48);
+		contentPane.add(roomInfosLabel);
+		roomInfosLabel.setVisible(false);
+		
 		personNumberSelector.addChangeListener(new ChangeListener() {
 	        public void stateChanged(ChangeEvent ce) {
 	        	personNumberInput.setText(String.valueOf(personNumberSelector.getValue()));
@@ -357,16 +462,14 @@ public class ClientGUI extends JFrame {
 		
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String SERVICE_URL1 = "http://localhost:30007/hotelorg/api/";
-				String SERVICE_URL2 = "http://localhost:30008/hotelscanner/api/";
-				String SERVICE_URL3 = "http://localhost:30009/tripfinder/api/";
+				String SERVICE_URL1 = "http://localhost:30009/tripfinder/api/";
+				String SERVICE_URL2 = "http://localhost:30007/hotelorg/api/" ;
+				String SERVICE_URL3 = "http://localhost:30008/hotelscanner/api/";
+				boolean BestRatePriceDisplay = false;
 				
 				String URI_HOTEL = "agency";
 				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
 				Map<String, String> URIS = new HashMap<String, String>();
-				URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-				URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-				URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
 				
 				String destination = destinationInput.getText();
 				String DateIn = dateIn.getText();
@@ -384,81 +487,180 @@ public class ClientGUI extends JFrame {
 				
 				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
 					errorMessage.setText("Veuillez selectionner au moins une agence");
-				} else if ((AgencyCheck1.isSelected()) && (AgencyCheck2.isSelected())&& (AgencyCheck3.isSelected())){
-					List<Hotel> resultHotel = new ArrayList<>(); 
-					int cpt = 1;
-					ArrayList<String> uriList = new ArrayList<>();
-					System.out.println("Results:\n");
-					for (String uri : URIS.keySet()) {
-						try {
-							String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
-							Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
-							for (Hotel hotel : returnedHotel) {
-								if(!hotel.getName().equals("Undefined")) {
-									uriList.add(uri);
-									resultHotel.add(hotel);
-									cpt++;
-								}
+				} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected()&& AgencyCheck3.isSelected()){
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected()&& !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				}
+					
+				List<Hotel> resultHotel = new ArrayList<>(); 
+				ArrayList<String> uriList = new ArrayList<>();
+				System.out.println("Results:\n");
+				for (String uri : URIS.keySet()) {
+					try {
+						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
+						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
+						for (Hotel hotel : returnedHotel) {
+							if(!hotel.getName().equals("Undefined")) {
+								uriList.add(uri);
+								resultHotel.add(hotel);
 							}
-						}
-						catch (Exception e) {
-							continue;
 						}
 					}
-					for (int i= 0; i < resultHotel.size() ; i++) {
-						for (int j= 0; j < resultHotel.size() ; j++) {
-							if(i != j) {
-								Hotel hotel = resultHotel.get(i);
-								Hotel toCompare = resultHotel.get(j);
-								if(hotel.getName().equals(toCompare.getName())) {
-									resultHotel.remove(j);
-								}
+					catch (Exception e) {
+						continue;
+					}
+				}
+					
+				for (int i= 0; i < resultHotel.size() ; i++) {
+					for (int j= 0; j < resultHotel.size() ; j++) {
+						if(i != j) {
+							Hotel hotel = resultHotel.get(i);
+							Hotel toCompare = resultHotel.get(j);
+							if(hotel.getName().equals(toCompare.getName())) {
+								resultHotel.remove(j);
 							}
 						}
+					}
+					
+				}
+				
+				for (Hotel hotel : resultHotel) {
+					hotelChoice.addItem(hotel.getName());
+				}
+				
+				Hotel selectedH = null;
+				Room selectedR = null;
+				String selectedHotel = (String)hotelChoice.getSelectedItem();
+				for (Hotel key : resultHotel) {
+					if(key.getName().equals(selectedHotel)) {
+						for(Room room : key.getRooms()) {
+							roomChoice.addItem(room);
+							selectedH = key;
+							selectedR = room;
+						}
+					}
+				}
+				
+				hotelChoice.addActionListener (new ActionListener () {
+				    public void actionPerformed(ActionEvent e) {
+				    	String selectedHotel = (String)hotelChoice.getSelectedItem();
+				    	roomChoice.removeAllItems();
 						
-					}
-					
-					for (Hotel hotel : resultHotel) {
-						if(!hotel.getName().equals("Undefined")) {
-							System.out.println(hotel.toString());
-							for (Room room: hotel.getRooms()) {
-								System.out.println(room.toString());
+						for (Hotel key : resultHotel) {
+							if(key.getName().equals(selectedHotel)) {
+								for(Room room : key.getRooms()) {
+									roomChoice.addItem(room);
+									roomNumberDisplay.setText(String.valueOf(room.getRoomNumber()));
+									roomPriceDisplay.setText(String.valueOf(room.getPrice()) + "€");
+									roomSizeDisplay.setText(String.valueOf(room.getSize()) + " personne(s)");
+									/*BufferedImage roomImg = null;
+									try {
+										roomImg = ImageIO.read(new URL(key.getImageFolder() + "/" + "0" + ".jpg"));
+										if(roomImg == null) {
+											roomImg = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/blurImage_563x373.jpeg"));
+										}
+									} catch (MalformedURLException e1) {
+										e1.printStackTrace();
+									} catch (IOException e1) {
+										e1.printStackTrace();
+									}
+									roomImage.setIcon(new ImageIcon(roomImg));*/
+								}
 							}
-							System.out.println();
 						}
-					}
-					
-					errorMessage.setVisible(false);
-					destinationInput.setVisible(false);
-					homeMessage.setVisible(false);
-					titleLabel.setVisible(false);
-					titleSeparator.setVisible(false);
-					destinationCover.setVisible(false);
-					destinationInput.setVisible(false);
-					personNumberLabel.setVisible(false);
-					personNumberInput.setVisible(false);
-					personNumberSelector.setVisible(false);
-					quitCover.setVisible(false);
-					exitBtn.setVisible(false);
-					starsSelector.setVisible(false);
-					starsNumberLabel.setVisible(false);
-					priceLabel.setVisible(false);
-					priceSelector.setVisible(false);
-					priceSelectedMax.setVisible(false);
-					departureLabel.setVisible(false);
-					returnDateLabel.setVisible(false);
-					dateIn.setVisible(false);
-					dateOut.setVisible(false);
-					dateInCover.setVisible(false);
-					dateOutCover.setVisible(false);
-					searchButtonBackground.setVisible(false);
-					searchButton.setVisible(false);
-					AgencyCheck1.setVisible(false);
-					AgencyCheck2.setVisible(false);
-					AgencyCheck3.setVisible(false);
-					chooseAgencyLabel.setVisible(false);
-					backButton.setVisible(true);
-					backCover.setVisible(true);
+				    }
+				});
+				
+				roomChoice.addActionListener (new ActionListener () {
+				    public void actionPerformed(ActionEvent e) {
+						
+						String selectedHotel = (String)hotelChoice.getSelectedItem();
+						String selectedRoom = String.valueOf(roomChoice.getSelectedItem());
+						
+						String number = "0";
+						
+						for (Hotel key : resultHotel) {
+							if(key.getName().equals(selectedHotel)) {
+								for(Room room : key.getRooms()) {
+									roomNumberDisplay.setText(String.valueOf(room.getRoomNumber()));
+									roomPriceDisplay.setText(String.valueOf(room.getPrice()) + "€");
+									roomSizeDisplay.setText(String.valueOf(room.getSize()) + " personne(s)");
+									if(room.getRoomNumber() == (Integer.parseInt(number))) {
+										/*BufferedImage roomImg = null;
+										try {
+											roomImg = ImageIO.read(new URL(key.getImageFolder() + "/" + String.valueOf(room.getRoomNumber()) + ".jpg"));
+											if(roomImg == null) {
+												roomImg = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/blurImage_563x373.jpeg"));
+											}
+										} catch (MalformedURLException e1) {
+											e1.printStackTrace();
+										} catch (IOException e1) {
+											e1.printStackTrace();
+										}
+										roomImage.setIcon(new ImageIcon(roomImg));*/
+									}
+								}
+							}
+						}
+				    }
+				});
+				
+				errorMessage.setVisible(false);
+				destinationInput.setVisible(false);
+				homeMessage.setVisible(false);
+				titleLabel.setVisible(false);
+				titleSeparator.setVisible(false);
+				destinationCover.setVisible(false);
+				destinationInput.setVisible(false);
+				personNumberLabel.setVisible(false);
+				personNumberInput.setVisible(false);
+				personNumberSelector.setVisible(false);
+				quitCover.setVisible(false);
+				exitBtn.setVisible(false);
+				starsSelector.setVisible(false);
+				starsNumberLabel.setVisible(false);
+				priceLabel.setVisible(false);
+				priceSelector.setVisible(false);
+				priceSelectedMax.setVisible(false);
+				departureLabel.setVisible(false);
+				returnDateLabel.setVisible(false);
+				dateIn.setVisible(false);
+				dateOut.setVisible(false);
+				dateInCover.setVisible(false);
+				dateOutCover.setVisible(false);
+				searchButtonBackground.setVisible(false);
+				searchButton.setVisible(false);
+				AgencyCheck1.setVisible(false);
+				AgencyCheck2.setVisible(false);
+				AgencyCheck3.setVisible(false);
+				chooseAgencyLabel.setVisible(false);
+				backButton.setVisible(true);
+				backCover.setVisible(true);
+				
+				if(BestRatePriceDisplay) {
 					topPrice.setVisible(true);
 					topStars.setVisible(true);
 					bestRateAgence.setVisible(true);
@@ -468,8 +670,22 @@ public class ClientGUI extends JFrame {
 					bestPriceAgence.setVisible(true);
 					bestPricePrix.setVisible(true);
 				} else {
-					
+					simplePub.setVisible(true);
 				}
+				
+				roomChoice.setVisible(true);
+				hotelChoice.setVisible(true);
+				chooseRoomLabel.setVisible(true);
+				chooseHotelLabel.setVisible(true);
+				imagePreviewLabel.setVisible(true);
+				roomHotelImage.setVisible(true);
+				roomNumberDisplay.setVisible(true);
+				roomSizeDisplay.setVisible(true);
+				roomPriceDisplay.setVisible(true);
+				roomInfosLabel.setVisible(true);
+				roomSizeLabel.setVisible(true);
+				roomPriceLabel.setVisible(true);
+				roomNumberLabel.setVisible(true);
 			}
 		});
 		
@@ -565,6 +781,22 @@ public class ClientGUI extends JFrame {
 				bestPriceHotel.setVisible(false);
 				bestPriceAgence.setVisible(false);
 				bestPricePrix.setVisible(false);
+				roomChoice.removeAllItems();
+				hotelChoice.removeAllItems();
+				roomChoice.setVisible(false);
+				hotelChoice.setVisible(false);
+				chooseRoomLabel.setVisible(false);
+				chooseHotelLabel.setVisible(false);
+				imagePreviewLabel.setVisible(false);
+				roomHotelImage.setVisible(false);
+				simplePub.setVisible(false);
+				roomNumberDisplay.setVisible(false);
+				roomSizeDisplay.setVisible(false);
+				roomPriceDisplay.setVisible(false);
+				roomInfosLabel.setVisible(false);
+				roomSizeLabel.setVisible(false);
+				roomPriceLabel.setVisible(false);
+				roomNumberLabel.setVisible(false);
 				errorMessage.setText("");
 				
 			}
@@ -585,13 +817,13 @@ public class ClientGUI extends JFrame {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		background.setIcon(new ImageIcon(img));
-		contentPane.add(background);
 		
 		JLabel backgroundSearch = new JLabel("");
-		backgroundSearch.setBounds(0, 5, 1142, 709);
+		backgroundSearch.setBounds(0, 0, 1142, 709);
 		backgroundSearch.setFont(new Font("Tahoma", Font.BOLD, 14));
 		backgroundSearch.setIcon(new ImageIcon(img));
 		contentPane.add(backgroundSearch);
+		background.setIcon(new ImageIcon(img));
+		contentPane.add(background);
 	}
 }
