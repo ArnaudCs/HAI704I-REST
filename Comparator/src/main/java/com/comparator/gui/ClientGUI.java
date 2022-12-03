@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.comparator.exceptions.ReservationException;
+import com.comparator.functions.MainFunctions;
 import com.comparator.models.Hotel;
+import com.comparator.models.Reservation;
 import com.comparator.models.Room;
 
 import ch.qos.logback.core.boolex.Matcher;
@@ -109,39 +113,31 @@ public class ClientGUI extends JFrame {
 		chooseAgencyLabel.setBounds(450, 89, 240, 42);
 		contentPane.add(chooseAgencyLabel);
 		
-		JLabel bestPriceHotel = new JLabel("Crowne Plaza Hotel");
-		bestPriceHotel.setFont(new Font("Tahoma", Font.BOLD, 15));
-		bestPriceHotel.setBounds(320, 46, 213, 21);
-		contentPane.add(bestPriceHotel);
-		bestPriceHotel.setVisible(false);
-		
-		JLabel bestRateHotel = new JLabel("Ritz");
-		bestRateHotel.setFont(new Font("Tahoma", Font.BOLD, 15));
-		bestRateHotel.setBounds(866, 46, 213, 21);
-		contentPane.add(bestRateHotel);
-		bestRateHotel.setVisible(false);
-		
 		JLabel bestRateAgence = new JLabel("hotel.org");
-		bestRateAgence.setFont(new Font("Tahoma", Font.BOLD, 15));
-		bestRateAgence.setBounds(924, 76, 117, 21);
+		bestRateAgence.setForeground(new Color(255, 255, 255));
+		bestRateAgence.setFont(new Font("Tahoma", Font.BOLD, 18));
+		bestRateAgence.setBounds(818, 84, 193, 22);
 		contentPane.add(bestRateAgence);
 		bestRateAgence.setVisible(false);
 		
 		JLabel bestPriceAgence = new JLabel("HotelScanner");
-		bestPriceAgence.setFont(new Font("Tahoma", Font.BOLD, 15));
-		bestPriceAgence.setBounds(360, 76, 117, 21);
+		bestPriceAgence.setForeground(new Color(255, 255, 255));
+		bestPriceAgence.setFont(new Font("Tahoma", Font.BOLD, 18));
+		bestPriceAgence.setBounds(274, 85, 176, 21);
 		contentPane.add(bestPriceAgence);
 		bestPriceAgence.setVisible(false);
 		
 		JLabel bestPricePrix = new JLabel("10");
-		bestPricePrix.setFont(new Font("Tahoma", Font.BOLD, 16));
-		bestPricePrix.setBounds(250, 76, 35, 21);
+		bestPricePrix.setForeground(new Color(255, 255, 255));
+		bestPricePrix.setFont(new Font("Tahoma", Font.BOLD, 14));
+		bestPricePrix.setBounds(474, 46, 68, 27);
 		contentPane.add(bestPricePrix);
 		bestPricePrix.setVisible(false);
 		
 		JLabel bestRateStars = new JLabel("4");
-		bestRateStars.setFont(new Font("Tahoma", Font.BOLD, 17));
-		bestRateStars.setBounds(810, 75, 35, 21);
+		bestRateStars.setForeground(new Color(255, 255, 255));
+		bestRateStars.setFont(new Font("Tahoma", Font.BOLD, 14));
+		bestRateStars.setBounds(802, 46, 53, 21);
 		contentPane.add(bestRateStars);
 		bestRateStars.setVisible(false);
 		
@@ -251,7 +247,7 @@ public class ClientGUI extends JFrame {
 		contentPane.add(topStars);
 		BufferedImage img9 = null;
 		try {
-			img9 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/bestRate_2.png"));
+			img9 = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/BestRate.png"));
 		} catch (MalformedURLException e1) {
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -395,6 +391,133 @@ public class ClientGUI extends JFrame {
 		exitBtn.setBorderPainted(false);
 		JButton backButton = new JButton("");
 		
+		JSeparator roomInfoSeparator = new JSeparator();
+		roomInfoSeparator.setBounds(115, 406, 247, 28);
+		contentPane.add(roomInfoSeparator);
+		roomInfoSeparator.setVisible(false);
+		
+		JButton checkoutBtn = new JButton("");
+		checkoutBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String SERVICE_URL1 = "http://localhost:30009/tripfinder/api/";
+				String SERVICE_URL2 = "http://localhost:30007/hotelorg/api/" ;
+				String SERVICE_URL3 = "http://localhost:30008/hotelscanner/api/";
+				boolean BestRatePriceDisplay = false;
+				
+				String URI_HOTEL = "agency";
+				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
+				Map<String, String> URIS = new HashMap<String, String>();
+				
+				String destination = destinationInput.getText();
+				String DateIn = dateIn.getText();
+				String DateOut = dateOut.getText();
+				int price = Integer.valueOf(priceSelector.getValue());;
+				int bedNumber = Integer.valueOf(personNumberInput.getText());
+				int stars = starsSelector.getSelectedIndex() + 1;
+				Map<String, String> params = new HashMap<>();
+				params.put("position", destination);
+				params.put("datein", DateIn);
+				params.put("dateout", DateOut);
+				params.put("size", String.valueOf(bedNumber));
+				params.put("rating", String.valueOf(stars));
+				params.put("price", String.valueOf(price));
+				
+				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
+					errorMessage.setText("Veuillez selectionner au moins une agence");
+				} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected()&& AgencyCheck3.isSelected()){
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected()&& !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				}
+					
+				List<Hotel> resultHotel = new ArrayList<>(); 
+				ArrayList<String> uriList = new ArrayList<>();
+				System.out.println("Results:\n");
+				for (String uri : URIS.keySet()) {
+					try {
+						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
+						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
+						for (Hotel hotel : returnedHotel) {
+							if(!hotel.getName().equals("Undefined")) {
+								uriList.add(uri);
+								resultHotel.add(hotel);
+							}
+						}
+					}
+					catch (Exception e1) {
+						continue;
+					}
+				}
+					
+				for (int i= 0; i < resultHotel.size() ; i++) {
+					for (int j= 0; j < resultHotel.size() ; j++) {
+						if(i != j) {
+							Hotel hotel = resultHotel.get(i);
+							Hotel toCompare = resultHotel.get(j);
+							if(hotel.getName().equals(toCompare.getName())) {
+								resultHotel.remove(j);
+							}
+						}
+					}
+					
+				}
+				
+				LocalDate ind = LocalDate.parse(DateIn);
+				LocalDate outd = LocalDate.parse(DateOut);
+				
+				/*try {
+					Hotel selectedHotel = (Hotel) hotelChoice.getSelectedItem();;
+					Room selectedRoom = (Room) roomChoice.getSelectedItem();;
+					Reservation resa = MainFunctions.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
+					selectedHotel.setResa(new ArrayList<>());
+					selectedHotel.getResa().add(resa);
+					String agencyURI = uriList.get(hotelChoice) + "/resa/" + String.valueOf(selectedHotel.getId());
+
+					proxy.put(agencyURI, selectedHotel);
+					System.out.println("Your order have been placed. Thank you for your purchase !\n");
+					MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
+					MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);
+					
+				} catch (ReservationException e3) {
+					e3.printStackTrace();
+					break;
+				}	*/
+			}
+		});
+		checkoutBtn.setForeground(Color.WHITE);
+		checkoutBtn.setContentAreaFilled(false);
+		checkoutBtn.setBorderPainted(false);
+		checkoutBtn.setBounds(148, 560, 148, 42);
+		contentPane.add(checkoutBtn);
+		checkoutBtn.setVisible(false);
+		
+		JLabel checkoutBtnCover = new JLabel("");
+		checkoutBtnCover.setBounds(148, 562, 180, 40);
+		contentPane.add(checkoutBtnCover);
+		checkoutBtnCover.setVisible(false);
+		
 		JLabel starsNumberLabel = new JLabel("Nombre d'étoiles");
 		starsNumberLabel.setBounds(420, 322, 182, 24);
 		starsNumberLabel.setForeground(Color.WHITE);
@@ -405,7 +528,7 @@ public class ClientGUI extends JFrame {
 		roomSizeDisplay.setFont(new Font("Tahoma", Font.BOLD, 17));
 		roomSizeDisplay.setForeground(new Color(255, 255, 255));
 		roomSizeDisplay.setBackground(new Color(255, 255, 255));
-		roomSizeDisplay.setBounds(265, 473, 193, 48);
+		roomSizeDisplay.setBounds(265, 453, 193, 48);
 		contentPane.add(roomSizeDisplay);
 		roomSizeDisplay.setVisible(false);
 		
@@ -413,7 +536,7 @@ public class ClientGUI extends JFrame {
 		roomPriceDisplay.setForeground(Color.WHITE);
 		roomPriceDisplay.setFont(new Font("Tahoma", Font.BOLD, 17));
 		roomPriceDisplay.setBackground(Color.WHITE);
-		roomPriceDisplay.setBounds(295, 531, 135, 48);
+		roomPriceDisplay.setBounds(295, 490, 135, 48);
 		contentPane.add(roomPriceDisplay);
 		roomPriceDisplay.setVisible(false);
 		
@@ -435,14 +558,14 @@ public class ClientGUI extends JFrame {
 		JLabel roomSizeLabel = new JLabel("Nombre de lits  :");
 		roomSizeLabel.setForeground(Color.WHITE);
 		roomSizeLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		roomSizeLabel.setBounds(120, 473, 180, 48);
+		roomSizeLabel.setBounds(120, 453, 180, 48);
 		contentPane.add(roomSizeLabel);
 		roomSizeLabel.setVisible(false);
 		
 		JLabel roomPriceLabel = new JLabel("Prix de la chambre :");
 		roomPriceLabel.setForeground(Color.WHITE);
 		roomPriceLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		roomPriceLabel.setBounds(120, 531, 180, 48);
+		roomPriceLabel.setBounds(120, 490, 180, 48);
 		contentPane.add(roomPriceLabel);
 		roomPriceLabel.setVisible(false);
 		
@@ -450,7 +573,7 @@ public class ClientGUI extends JFrame {
 		roomInfosLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		roomInfosLabel.setForeground(Color.WHITE);
 		roomInfosLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
-		roomInfosLabel.setBounds(69, 376, 337, 48);
+		roomInfosLabel.setBounds(69, 366, 337, 48);
 		contentPane.add(roomInfosLabel);
 		roomInfosLabel.setVisible(false);
 		
@@ -547,6 +670,55 @@ public class ClientGUI extends JFrame {
 					
 				}
 				
+				double bestPrice = 1000;
+				String bestPriceHotel = "Aucune info";
+				double BestRate = 0;
+				String bestRateHotel = "Aucune info";
+				
+				for (Hotel key : resultHotel) {
+					if(key.getStars() > BestRate) {
+						BestRate = key.getStars();
+						bestRateHotel = key.getName();
+					}
+					for(Room room : key.getRooms()) {
+						if(room.getPrice() < bestPrice) {
+							bestPrice = room.getPrice();
+							bestPriceHotel = key.getName();
+						}
+					}
+				}
+				
+				bestPriceAgence.setText(bestPriceHotel);
+				bestRateAgence.setText(bestRateHotel);
+				bestPricePrix.setText(String.valueOf(bestPrice) + "€");
+				bestRateStars.setText(String.valueOf(BestRate));
+				
+				
+				BufferedImage firstImage = null;
+				String firstHotel = null;
+				if(!(resultHotel.isEmpty())) {
+					firstHotel = resultHotel.get(0).getImageFolder();
+					try {
+						firstImage = ImageIO.read(new URL(firstHotel + "0" + ".jpg"));
+						if(firstImage == null) {
+							firstImage = ImageIO.read(new URL(firstHotel + "/" + "0" + ".jpg"));
+						}
+					} catch (MalformedURLException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					roomHotelImage.setIcon(new ImageIcon(firstImage));
+				} else {
+					firstHotel = "http://hotelfinder.sc1samo7154.universe.wf/gui/roomImageCover.png";
+					try {
+						firstImage = ImageIO.read(new URL(firstHotel));
+					}catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					roomHotelImage.setIcon(new ImageIcon(firstImage));
+				}
+				
 				for (Hotel hotel : resultHotel) {
 					hotelChoice.addItem(hotel.getName());
 				}
@@ -576,18 +748,14 @@ public class ClientGUI extends JFrame {
 									roomNumberDisplay.setText(String.valueOf(room.getRoomNumber()));
 									roomPriceDisplay.setText(String.valueOf(room.getPrice()) + "€");
 									roomSizeDisplay.setText(String.valueOf(room.getSize()) + " personne(s)");
-									/*BufferedImage roomImg = null;
+									BufferedImage hotelImage = null;
 									try {
-										roomImg = ImageIO.read(new URL(key.getImageFolder() + "/" + "0" + ".jpg"));
-										if(roomImg == null) {
-											roomImg = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/blurImage_563x373.jpeg"));
-										}
-									} catch (MalformedURLException e1) {
-										e1.printStackTrace();
+										hotelImage = ImageIO.read(new URL(key.getImageFolder() + "0" + ".jpg"));
 									} catch (IOException e1) {
+										// TODO Auto-generated catch block
 										e1.printStackTrace();
 									}
-									roomImage.setIcon(new ImageIcon(roomImg));*/
+									roomHotelImage.setIcon(new ImageIcon(hotelImage));
 								}
 							}
 						}
@@ -602,25 +770,32 @@ public class ClientGUI extends JFrame {
 						
 						String number = "0";
 						
+						java.util.regex.Matcher m = Pattern.compile("[^0-9]*([0-9]+).*").matcher(selectedRoom);
+						if (m.matches()) {
+						    number = m.group(1);
+						}
+						
 						for (Hotel key : resultHotel) {
 							if(key.getName().equals(selectedHotel)) {
 								for(Room room : key.getRooms()) {
-									roomNumberDisplay.setText(String.valueOf(room.getRoomNumber()));
-									roomPriceDisplay.setText(String.valueOf(room.getPrice()) + "€");
-									roomSizeDisplay.setText(String.valueOf(room.getSize()) + " personne(s)");
 									if(room.getRoomNumber() == (Integer.parseInt(number))) {
-										/*BufferedImage roomImg = null;
-										try {
-											roomImg = ImageIO.read(new URL(key.getImageFolder() + "/" + String.valueOf(room.getRoomNumber()) + ".jpg"));
-											if(roomImg == null) {
-												roomImg = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/blurImage_563x373.jpeg"));
+										roomNumberDisplay.setText(String.valueOf(room.getRoomNumber()));
+										roomPriceDisplay.setText(String.valueOf(room.getPrice()) + "€");
+										roomSizeDisplay.setText(String.valueOf(room.getSize()) + " personne(s)");
+										if(room.getRoomNumber() == (Integer.parseInt(number))) {
+											BufferedImage roomImg = null;
+											try {
+												roomImg = ImageIO.read(new URL(key.getImageFolder() + String.valueOf(room.getRoomNumber()) + ".jpg"));
+												if(roomImg == null) {
+													roomImg = ImageIO.read(new URL(key.getImageFolder() + String.valueOf(room.getRoomNumber()) + ".jpg"));
+												}
+											} catch (MalformedURLException e1) {
+												e1.printStackTrace();
+											} catch (IOException e1) {
+												e1.printStackTrace();
 											}
-										} catch (MalformedURLException e1) {
-											e1.printStackTrace();
-										} catch (IOException e1) {
-											e1.printStackTrace();
+											roomHotelImage.setIcon(new ImageIcon(roomImg));
 										}
-										roomImage.setIcon(new ImageIcon(roomImg));*/
 									}
 								}
 							}
@@ -664,9 +839,7 @@ public class ClientGUI extends JFrame {
 					topPrice.setVisible(true);
 					topStars.setVisible(true);
 					bestRateAgence.setVisible(true);
-					bestRateHotel.setVisible(true);
 					bestRateStars.setVisible(true);
-					bestPriceHotel.setVisible(true);
 					bestPriceAgence.setVisible(true);
 					bestPricePrix.setVisible(true);
 				} else {
@@ -686,6 +859,9 @@ public class ClientGUI extends JFrame {
 				roomSizeLabel.setVisible(true);
 				roomPriceLabel.setVisible(true);
 				roomNumberLabel.setVisible(true);
+				checkoutBtn.setVisible(true);
+				checkoutBtnCover.setVisible(true);
+				roomInfoSeparator.setVisible(true);
 			}
 		});
 		
@@ -776,9 +952,7 @@ public class ClientGUI extends JFrame {
 				topPrice.setVisible(false);
 				topStars.setVisible(false);
 				bestRateAgence.setVisible(false);
-				bestRateHotel.setVisible(false);
 				bestRateStars.setVisible(false);
-				bestPriceHotel.setVisible(false);
 				bestPriceAgence.setVisible(false);
 				bestPricePrix.setVisible(false);
 				roomChoice.removeAllItems();
@@ -797,6 +971,9 @@ public class ClientGUI extends JFrame {
 				roomSizeLabel.setVisible(false);
 				roomPriceLabel.setVisible(false);
 				roomNumberLabel.setVisible(false);
+				checkoutBtn.setVisible(false);
+				checkoutBtnCover.setVisible(false);
+				roomInfoSeparator.setVisible(false);
 				errorMessage.setText("");
 				
 			}
