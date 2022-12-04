@@ -22,7 +22,7 @@ public class HotelData {
 	@Bean
 	public CommandLineRunner initDatabase(HotelRepository repository) {
 		return args -> {
-			Hotel h1 = new Hotel("Kyriad", 3.4, null, null, null, "http://hotelfinder.sc1samo7154.universe.wf/crowne/");
+			Hotel h1 = new Hotel("Kyriad", 3.4, null, null, null, "http://hotelfinder.sc1samo7154.universe.wf/gui/kyriad/");
 			List<Room> rooms = new ArrayList<>();
 			Room r1 = new Room(1, 75, 2, h1);
 			Room r2 = new Room(2, 70, 2, h1);

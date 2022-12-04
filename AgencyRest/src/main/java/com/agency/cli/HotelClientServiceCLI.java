@@ -45,7 +45,6 @@ public class HotelClientServiceCLI extends AbstractMain implements CommandLineRu
 			URIS.put(SERVICE_URL1 + "hotels", SERVICE_URL1 + URI_HOTEL_ID);
 			URIS.put(SERVICE_URL2 + "hotels", SERVICE_URL2 + URI_HOTEL_ID);
 			URIS.put(SERVICE_URL3 + "hotels", SERVICE_URL3 + URI_HOTEL_ID);
-			URIS.put(SERVICE_URL4 + "hotels", SERVICE_URL4 + URI_HOTEL_ID);
 			do {
 				menu();
 				userInput = inputReader.readLine();

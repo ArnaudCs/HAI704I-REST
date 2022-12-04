@@ -873,7 +873,7 @@ public class ClientGUI extends JFrame {
 					
 				} catch (ReservationException e3) {
 					e3.printStackTrace();
-					break;
+					System.exit(1);
 				}	
 				
 				errorMessage.setVisible(false);

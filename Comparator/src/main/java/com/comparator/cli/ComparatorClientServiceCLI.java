@@ -44,9 +44,10 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 			URI_HOTEL = "agency";
 			URI_HOTEL_ID = URI_HOTEL + "/{id}";
 			URIS = new HashMap<String, String>();
-			URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-			URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-			URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+			setTestServiceUrl(inputReader);
+			URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + "/" + URI_HOTEL_ID);
+			URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + "/" + URI_HOTEL_ID);
+			URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + "/" + URI_HOTEL_ID);
 			System.out.println("How do you want to run the client ?\n1. GUI\n2. CLI");
 			int choice = Integer.parseInt(inputReader.readLine());
 			if(choice == 1) {

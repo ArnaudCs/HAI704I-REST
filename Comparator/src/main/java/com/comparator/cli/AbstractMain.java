@@ -7,7 +7,6 @@ public abstract class AbstractMain {
 	public static String SERVICE_URL1;
 	public static String SERVICE_URL2;
 	public static String SERVICE_URL3;
-	public static String SERVICE_URL4;
 	public static final String QUIT = "0";
 	
 	protected void setTestServiceUrl(BufferedReader inputReader) throws IOException {
