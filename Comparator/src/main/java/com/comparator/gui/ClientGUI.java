@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -397,119 +398,11 @@ public class ClientGUI extends JFrame {
 		roomInfoSeparator.setVisible(false);
 		
 		JButton checkoutBtn = new JButton("");
-		checkoutBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String SERVICE_URL1 = "http://localhost:30009/tripfinder/api/";
-				String SERVICE_URL2 = "http://localhost:30007/hotelorg/api/" ;
-				String SERVICE_URL3 = "http://localhost:30008/hotelscanner/api/";
-				boolean BestRatePriceDisplay = false;
-				
-				String URI_HOTEL = "agency";
-				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
-				Map<String, String> URIS = new HashMap<String, String>();
-				
-				String destination = destinationInput.getText();
-				String DateIn = dateIn.getText();
-				String DateOut = dateOut.getText();
-				int price = Integer.valueOf(priceSelector.getValue());;
-				int bedNumber = Integer.valueOf(personNumberInput.getText());
-				int stars = starsSelector.getSelectedIndex() + 1;
-				Map<String, String> params = new HashMap<>();
-				params.put("position", destination);
-				params.put("datein", DateIn);
-				params.put("dateout", DateOut);
-				params.put("size", String.valueOf(bedNumber));
-				params.put("rating", String.valueOf(stars));
-				params.put("price", String.valueOf(price));
-				
-				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
-					errorMessage.setText("Veuillez selectionner au moins une agence");
-				} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected()&& AgencyCheck3.isSelected()){
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected()&& !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
-				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
-				} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
-				}
-					
-				List<Hotel> resultHotel = new ArrayList<>(); 
-				ArrayList<String> uriList = new ArrayList<>();
-				System.out.println("Results:\n");
-				for (String uri : URIS.keySet()) {
-					try {
-						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
-						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
-						for (Hotel hotel : returnedHotel) {
-							if(!hotel.getName().equals("Undefined")) {
-								uriList.add(uri);
-								resultHotel.add(hotel);
-							}
-						}
-					}
-					catch (Exception e1) {
-						continue;
-					}
-				}
-					
-				for (int i= 0; i < resultHotel.size() ; i++) {
-					for (int j= 0; j < resultHotel.size() ; j++) {
-						if(i != j) {
-							Hotel hotel = resultHotel.get(i);
-							Hotel toCompare = resultHotel.get(j);
-							if(hotel.getName().equals(toCompare.getName())) {
-								resultHotel.remove(j);
-							}
-						}
-					}
-					
-				}
-				
-				LocalDate ind = LocalDate.parse(DateIn);
-				LocalDate outd = LocalDate.parse(DateOut);
-				
-				/*try {
-					Hotel selectedHotel = (Hotel) hotelChoice.getSelectedItem();;
-					Room selectedRoom = (Room) roomChoice.getSelectedItem();;
-					Reservation resa = MainFunctions.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
-					selectedHotel.setResa(new ArrayList<>());
-					selectedHotel.getResa().add(resa);
-					String agencyURI = uriList.get(hotelChoice) + "/resa/" + String.valueOf(selectedHotel.getId());
-
-					proxy.put(agencyURI, selectedHotel);
-					System.out.println("Your order have been placed. Thank you for your purchase !\n");
-					MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
-					MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);
-					
-				} catch (ReservationException e3) {
-					e3.printStackTrace();
-					break;
-				}	*/
-			}
-		});
+		
 		checkoutBtn.setForeground(Color.WHITE);
 		checkoutBtn.setContentAreaFilled(false);
 		checkoutBtn.setBorderPainted(false);
-		checkoutBtn.setBounds(148, 560, 148, 42);
+		checkoutBtn.setBounds(164, 561, 148, 42);
 		contentPane.add(checkoutBtn);
 		checkoutBtn.setVisible(false);
 		
@@ -517,6 +410,14 @@ public class ClientGUI extends JFrame {
 		checkoutBtnCover.setBounds(148, 562, 180, 40);
 		contentPane.add(checkoutBtnCover);
 		checkoutBtnCover.setVisible(false);
+		BufferedImage commander = null;
+		try {
+			commander = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/commander.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		checkoutBtnCover.setIcon(new ImageIcon(commander));
 		
 		JLabel starsNumberLabel = new JLabel("Nombre d'étoiles");
 		starsNumberLabel.setBounds(420, 322, 182, 24);
@@ -862,6 +763,176 @@ public class ClientGUI extends JFrame {
 				checkoutBtn.setVisible(true);
 				checkoutBtnCover.setVisible(true);
 				roomInfoSeparator.setVisible(true);
+			}
+		});
+		
+		checkoutBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String SERVICE_URL1 = "http://localhost:30009/tripfinder/api/";
+				String SERVICE_URL2 = "http://localhost:30007/hotelorg/api/" ;
+				String SERVICE_URL3 = "http://localhost:30008/hotelscanner/api/";
+				boolean BestRatePriceDisplay = false;
+				
+				String URI_HOTEL = "agency";
+				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
+				Map<String, String> URIS = new HashMap<String, String>();
+				
+				String destination = destinationInput.getText();
+				String DateIn = dateIn.getText();
+				String DateOut = dateOut.getText();
+				int price = Integer.valueOf(priceSelector.getValue());;
+				int bedNumber = Integer.valueOf(personNumberInput.getText());
+				int stars = starsSelector.getSelectedIndex() + 1;
+				Map<String, String> params = new HashMap<>();
+				params.put("position", destination);
+				params.put("datein", DateIn);
+				params.put("dateout", DateOut);
+				params.put("size", String.valueOf(bedNumber));
+				params.put("rating", String.valueOf(stars));
+				params.put("price", String.valueOf(price));
+				
+				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
+					errorMessage.setText("Veuillez selectionner au moins une agence");
+				} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected()&& AgencyCheck3.isSelected()){
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected()&& !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				}
+					
+				List<Hotel> resultHotel = new ArrayList<>(); 
+				ArrayList<String> uriList = new ArrayList<>();
+				System.out.println("Results:\n");
+				for (String uri : URIS.keySet()) {
+					try {
+						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
+						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
+						for (Hotel hotel : returnedHotel) {
+							if(!hotel.getName().equals("Undefined")) {
+								uriList.add(uri);
+								resultHotel.add(hotel);
+							}
+						}
+					}
+					catch (Exception e1) {
+						continue;
+					}
+				}
+					
+				for (int i= 0; i < resultHotel.size() ; i++) {
+					for (int j= 0; j < resultHotel.size() ; j++) {
+						if(i != j) {
+							Hotel hotel = resultHotel.get(i);
+							Hotel toCompare = resultHotel.get(j);
+							if(hotel.getName().equals(toCompare.getName())) {
+								resultHotel.remove(j);
+							}
+						}
+					}
+					
+				}
+				
+				LocalDate ind = LocalDate.parse(DateIn);
+				LocalDate outd = LocalDate.parse(DateOut);
+				
+				try {
+					Hotel selectedHotel = (Hotel) hotelChoice.getSelectedItem();
+					int hotelChoiceNumber = hotelChoice.getSelectedIndex();
+					Room selectedRoom = (Room) roomChoice.getSelectedItem();;
+					BufferedReader reader = null; // Je ne comprends pas à quoi sert Reader
+					Reservation resa = MainFunctions.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
+					selectedHotel.setResa(new ArrayList<>());
+					selectedHotel.getResa().add(resa);
+					String agencyURI = uriList.get(hotelChoiceNumber) + "/resa/" + String.valueOf(selectedHotel.getId());
+
+					proxy.put(agencyURI, selectedHotel);
+					System.out.println("Your order have been placed. Thank you for your purchase !\n");
+					MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
+					MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);
+					
+				} catch (ReservationException e3) {
+					e3.printStackTrace();
+					break;
+				}	
+				
+				errorMessage.setVisible(false);
+				destinationInput.setVisible(false);
+				homeMessage.setVisible(false);
+				titleLabel.setVisible(false);
+				titleSeparator.setVisible(false);
+				destinationCover.setVisible(false);
+				destinationInput.setVisible(false);
+				personNumberLabel.setVisible(false);
+				personNumberInput.setVisible(false);
+				personNumberSelector.setVisible(false);
+				quitCover.setVisible(true);
+				exitBtn.setVisible(true);
+				starsSelector.setVisible(false);
+				starsNumberLabel.setVisible(false);
+				priceLabel.setVisible(false);
+				priceSelector.setVisible(false);
+				priceSelectedMax.setVisible(false);
+				departureLabel.setVisible(false);
+				returnDateLabel.setVisible(false);
+				dateIn.setVisible(false);
+				dateOut.setVisible(false);
+				dateInCover.setVisible(false);
+				dateOutCover.setVisible(false);
+				searchButtonBackground.setVisible(false);
+				searchButton.setVisible(false);
+				AgencyCheck1.setVisible(false);
+				AgencyCheck2.setVisible(false);
+				AgencyCheck3.setVisible(false);
+				chooseAgencyLabel.setVisible(false);
+				backButton.setVisible(false);
+				backCover.setVisible(false);
+				topPrice.setVisible(false);
+				topStars.setVisible(false);
+				bestRateAgence.setVisible(false);
+				bestRateStars.setVisible(false);
+				bestPriceAgence.setVisible(false);
+				bestPricePrix.setVisible(false);
+				roomChoice.removeAllItems();
+				hotelChoice.removeAllItems();
+				roomChoice.setVisible(false);
+				hotelChoice.setVisible(false);
+				chooseRoomLabel.setVisible(false);
+				chooseHotelLabel.setVisible(false);
+				imagePreviewLabel.setVisible(false);
+				roomHotelImage.setVisible(false);
+				simplePub.setVisible(false);
+				roomNumberDisplay.setVisible(false);
+				roomSizeDisplay.setVisible(false);
+				roomPriceDisplay.setVisible(false);
+				roomInfosLabel.setVisible(false);
+				roomSizeLabel.setVisible(false);
+				roomPriceLabel.setVisible(false);
+				roomNumberLabel.setVisible(false);
+				checkoutBtn.setVisible(false);
+				checkoutBtnCover.setVisible(false);
+				roomInfoSeparator.setVisible(false);
+				errorMessage.setText("");
 			}
 		});
 		
