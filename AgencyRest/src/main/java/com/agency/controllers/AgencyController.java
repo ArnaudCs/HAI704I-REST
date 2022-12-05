@@ -107,9 +107,9 @@ public class AgencyController {
 			@RequestParam("datein") String datein, @RequestParam("dateout") String dateout, @RequestParam("price") double price) {
 		Agency agence = repository.findAll().get(0);
 		List<Hotel> toReturnHotels = new ArrayList<>();
-		ArrayList<String> URIS = new ArrayList<>();
+		HashMap<String, Double> URIS = new HashMap<>();
 		for (Offers offer: agence.getOffers()) {
-			URIS.add(offer.getUri());
+			URIS.put(offer.getUri(), offer.getAmount());
 		}
 		Map<String, String> params = new HashMap<>();
 		params.put("position", position);
@@ -118,11 +118,12 @@ public class AgencyController {
 		params.put("size", String.valueOf(size));
 		params.put("rating", String.valueOf(rating));
 		params.put("price", String.valueOf(price));
-		for (String uri : URIS) {
+		for (String uri : URIS.keySet()) {
 			try {
 				String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
 				Hotel returnedHotel = proxy.getForObject(url, Hotel.class, params);
 				if(!returnedHotel.getName().equals("Undefined")) {
+					returnedHotel.setImageFolder(returnedHotel.getImageFolder()  + URIS.get(uri).toString() +"d");
 					toReturnHotels.add(returnedHotel);						
 				}
 			}

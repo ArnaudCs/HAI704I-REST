@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,42 +145,56 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 				params.put("rating", String.valueOf(rating));
 				params.put("price", String.valueOf(price));
 				
-				List<Hotel> resultHotel = new ArrayList<>(); 
-				int cpt = 1;
-				ArrayList<String> uriList = new ArrayList<>();
-				System.out.println("Results:\n");
+				HashMap<Hotel, HashMap<String, Double>> hotelMap = new HashMap<>();
 				for (String uri : URIS.keySet()) {
 					try {
 						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
 						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
 						for (Hotel hotel : returnedHotel) {
 							if(!hotel.getName().equals("Undefined")) {
-								uriList.add(uri);
-								resultHotel.add(hotel);
-								cpt++;
+								HashMap<String, Double> agencyMap = new HashMap<>();
+								int lastIndex = hotel.getImageFolder().lastIndexOf("/");
+								double discount = Double.parseDouble(hotel.getImageFolder().substring(lastIndex + 1));
+								agencyMap.put(uri, discount);
+								hotel.setImageFolder(hotel.getImageFolder().substring(0,lastIndex));
+								hotelMap.put(hotel, agencyMap);
 							}
 						}
 					}
 					catch (Exception e) {
-						continue;
+						e.printStackTrace();
 					}
 				}
-				for (int i= 0; i < resultHotel.size() ; i++) {
-					for (int j= 0; j < resultHotel.size() ; j++) {
+				for (int i= 0; i < hotelMap.size() ; i++) {
+					for (int j= 0; j < hotelMap.size() ; j++) {
 						if(i != j) {
-							Hotel hotel = resultHotel.get(i);
-							Hotel toCompare = resultHotel.get(j);
+							Hotel hotel = (Hotel) hotelMap.keySet().toArray()[i];
+							Hotel toCompare = (Hotel) hotelMap.keySet().toArray()[j];
+							HashMap<String, Double> agency1 = hotelMap.get(hotel);
+							String agencyUrl1 = (String) agency1.keySet().toArray()[0];
+							double discount1 = agency1.get(agencyUrl1);
 							if(hotel.getName().equals(toCompare.getName())) {
-								resultHotel.remove(j);
+								HashMap<String, Double> agency2 = hotelMap.get(toCompare);
+								String agencyUrl2 = (String) agency2.keySet().toArray()[0];
+								double discount2 = agency2.get(agencyUrl2);
+								if(discount1 >= discount2) {
+									hotelMap.remove(toCompare);									
+								}
 							}
 						}
 					}
 					
 				}
 
-				for (Hotel hotel : resultHotel) {
+				System.out.println("Results:\n");
+				for (Hotel hotel : hotelMap.keySet()) {
 					if(!hotel.getName().equals("Undefined")) {
 						System.out.println(hotel.toString());
+						String uri = (String) hotelMap.get(hotel).keySet().toArray()[0];
+						proxy.getForObject(uri, Agency[].class);
+						Agency[] agencies = proxy.getForObject(uri, Agency[].class);
+						System.out.println("The best price is provided to you by "+ agencies[0].getAgencyName() + " with " 
+						+ hotelMap.get(hotel).get(uri).toString() +"% discount !");
 						for (Room room: hotel.getRooms()) {
 							System.out.println(room.toString());
 						}
@@ -199,7 +212,7 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 						System.out.println("Quitting hotel research...");
 						break;
 					}
-					else if(hotelChoice > resultHotel.size() || hotelChoice <= -1) {
+					else if(hotelChoice > hotelMap.size() || hotelChoice <= -1) {
 						System.err.println("Impossible choice !");
 						hotelChoice = -1;
 					}
@@ -212,13 +225,14 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 				LocalDate outd = LocalDate.parse(outDate);
 				if(hotelChoice != 0 && roomChoice != 0) {
 					try {
-						Hotel selectedHotel = resultHotel.get(hotelChoice-1);
+						Hotel selectedHotel =(Hotel) hotelMap.keySet().toArray()[hotelChoice - 1];
 						Room selectedRoom = selectedHotel.getRooms().get(roomChoice-1);
 						Reservation resa = MainFunctions.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
 						selectedHotel.setResa(new ArrayList<>());
 						selectedHotel.getResa().add(resa);
-						String agencyURI = uriList.get(hotelChoice) + "/resa/" + String.valueOf(selectedHotel.getId());
-
+						// probleme ici
+						String agencyURI = (String) hotelMap.get(selectedHotel).keySet().toArray()[0];
+						String url = agencyURI + "/resa/" + String.valueOf(selectedHotel.getId());
 						proxy.put(agencyURI, selectedHotel);
 						System.out.println("Your order have been placed. Thank you for your purchase !\n");
 						MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
