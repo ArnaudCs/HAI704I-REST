@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -132,9 +133,9 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 				double rating = Double.parseDouble(reader.readLine());
 				System.out.println("\nPrice: ");
 				double price = Double.parseDouble(reader.readLine());
-				System.out.println("\nDate in: ");
+				System.out.println("\nDate in (yyyy-mm-dd): ");
 				String inDate = "2022-05-05";
-				System.out.println("\nDate out: ");
+				System.out.println("\nDate out (yyyy-mm-dd): ");
 				String outDate = "2022-05-06";
 				System.out.println("\nNumber of persons: ");
 				int size = Integer.parseInt(reader.readLine());
@@ -168,18 +169,23 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 				for (int i= 0; i < hotelMap.size() ; i++) {
 					for (int j= 0; j < hotelMap.size() ; j++) {
 						if(i != j) {
-							Hotel hotel = (Hotel) hotelMap.keySet().toArray()[i];
-							Hotel toCompare = (Hotel) hotelMap.keySet().toArray()[j];
-							HashMap<String, Double> agency1 = hotelMap.get(hotel);
-							String agencyUrl1 = (String) agency1.keySet().toArray()[0];
-							double discount1 = agency1.get(agencyUrl1);
-							if(hotel.getName().equals(toCompare.getName())) {
-								HashMap<String, Double> agency2 = hotelMap.get(toCompare);
-								String agencyUrl2 = (String) agency2.keySet().toArray()[0];
-								double discount2 = agency2.get(agencyUrl2);
-								if(discount1 >= discount2) {
-									hotelMap.remove(toCompare);									
+							try {
+								Hotel hotel = (Hotel) hotelMap.keySet().toArray()[i];
+								Hotel toCompare = (Hotel) hotelMap.keySet().toArray()[j];
+								HashMap<String, Double> agency1 = hotelMap.get(hotel);
+								String agencyUrl1 = (String) agency1.keySet().toArray()[0];
+								double discount1 = agency1.get(agencyUrl1);
+								if(hotel.getName().equals(toCompare.getName())) {
+									HashMap<String, Double> agency2 = hotelMap.get(toCompare);
+									String agencyUrl2 = (String) agency2.keySet().toArray()[0];
+									double discount2 = agency2.get(agencyUrl2);
+									if(discount1 >= discount2) {
+										hotelMap.remove(toCompare);									
+									}
 								}
+							}
+							catch (Exception e) {
+								continue;
 							}
 						}
 					}
@@ -231,9 +237,15 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 						selectedHotel.setResa(new ArrayList<>());
 						selectedHotel.getResa().add(resa);
 						// probleme ici
-						String agencyURI = (String) hotelMap.get(selectedHotel).keySet().toArray()[0];
+						String agencyURI = "";
+						for(Entry<Hotel, HashMap<String, Double>> map: hotelMap.entrySet()) {
+							if(map.getKey().equals(selectedHotel)) {
+								agencyURI = (String) map.getValue().keySet().toArray()[0];
+								break;
+							}
+						}
 						String url = agencyURI + "/resa/" + String.valueOf(selectedHotel.getId());
-						proxy.put(agencyURI, selectedHotel);
+						proxy.put(url, selectedHotel);
 						System.out.println("Your order have been placed. Thank you for your purchase !\n");
 						MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
 						MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);
