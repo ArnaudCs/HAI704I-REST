@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.hotel</groupId>
-	<artifactId>webservice</artifactId>
+	<artifactId>Kyriad</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>HotelRest</name>
 	<description>Hotel WebService using REST</description>

@@ -272,6 +272,7 @@ public class ClientGUI extends JFrame {
 		JButton searchButton = new JButton("");
 		searchButton.setBounds(500, 573, 148, 42);
 		searchButton.setForeground(new Color(255, 255, 255));
+		searchButton.setVisible(false);
 		
 		JLabel homeMessage = new JLabel("Indiquez une destination ...");
 		homeMessage.setBounds(450, 156, 240, 42);
@@ -321,6 +322,7 @@ public class ClientGUI extends JFrame {
 			e1.printStackTrace();
 		}
 		searchButtonBackground.setIcon(new ImageIcon(img4));
+		searchButtonBackground.setVisible(false);
 		
 		JLabel personNumberLabel = new JLabel("Nombre de Personnes : ");
 		personNumberLabel.setBounds(340, 261, 234, 24);
@@ -491,12 +493,49 @@ public class ClientGUI extends JFrame {
 	        }
 		 });
 		
+		AgencyCheck1.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	if(AgencyCheck1.isSelected()) {
+		    		searchButton.setVisible(true);
+		    		searchButtonBackground.setVisible(true);
+		    	}else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+		    		searchButton.setVisible(false);
+		    		searchButtonBackground.setVisible(false);
+		    	}
+		    }
+		});
+		
+		AgencyCheck2.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	if(AgencyCheck2.isSelected()) {
+		    		searchButton.setVisible(true);
+		    		searchButtonBackground.setVisible(true);
+		    	}else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+		    		searchButton.setVisible(false);
+		    		searchButtonBackground.setVisible(false);
+		    	}
+		    }
+		});
+		
+		AgencyCheck3.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	if(AgencyCheck3.isSelected()) {
+		    		searchButton.setVisible(true);
+		    		searchButtonBackground.setVisible(true);
+		    	}else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+		    		searchButton.setVisible(false);
+		    		searchButtonBackground.setVisible(false);
+		    	}
+		    }
+		});
+		
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String SERVICE_URL1 = "http://localhost:30009/tripfinder/api/";
 				String SERVICE_URL2 = "http://localhost:30007/hotelorg/api/" ;
 				String SERVICE_URL3 = "http://localhost:30008/hotelscanner/api/";
 				boolean BestRatePriceDisplay = false;
+				boolean noSelection = true;
 				
 				String URI_HOTEL = "agency";
 				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
@@ -516,62 +555,85 @@ public class ClientGUI extends JFrame {
 				params.put("rating", String.valueOf(stars));
 				params.put("price", String.valueOf(price));
 				
-				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
-					errorMessage.setText("Veuillez selectionner au moins une agence");
-				} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected()&& AgencyCheck3.isSelected()){
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected()&& !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
-				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
-				} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
+				while(noSelection) {
+					if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
+						errorMessage.setText("Veuillez selectionner au moins une agence");
+					} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected()&& AgencyCheck3.isSelected()){
+						URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+						URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+						URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+						BestRatePriceDisplay = true;
+						noSelection = false;
+					} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+						URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+						URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+						BestRatePriceDisplay = true;
+						noSelection = false;
+					} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+						URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+						URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+						BestRatePriceDisplay = true;
+						noSelection = false;
+					} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected()&& !(AgencyCheck3.isSelected())) {
+						URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+						URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+						BestRatePriceDisplay = true;
+						noSelection = false;
+					} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+						URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+						BestRatePriceDisplay = false;
+						noSelection = false;
+					} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+						URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+						BestRatePriceDisplay = false;
+						noSelection = false;
+					} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+						URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+						BestRatePriceDisplay = false;
+						noSelection = false;
+					}
 				}
 					
-				List<Hotel> resultHotel = new ArrayList<>(); 
-				ArrayList<String> uriList = new ArrayList<>();
-				System.out.println("Results:\n");
+				HashMap<Hotel, HashMap<String, Double>> hotelMap = new HashMap<>();
 				for (String uri : URIS.keySet()) {
 					try {
 						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
 						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
 						for (Hotel hotel : returnedHotel) {
 							if(!hotel.getName().equals("Undefined")) {
-								uriList.add(uri);
-								resultHotel.add(hotel);
+								HashMap<String, Double> agencyMap = new HashMap<>();
+								int lastIndex = hotel.getImageFolder().lastIndexOf("/");
+								double discount = Double.parseDouble(hotel.getImageFolder().substring(lastIndex + 1));
+								agencyMap.put(uri, discount);
+								hotel.setImageFolder(hotel.getImageFolder().substring(0,lastIndex));
+								hotelMap.put(hotel, agencyMap);
 							}
 						}
 					}
 					catch (Exception e) {
-						continue;
+						e.printStackTrace();
 					}
 				}
-					
-				for (int i= 0; i < resultHotel.size() ; i++) {
-					for (int j= 0; j < resultHotel.size() ; j++) {
+				for (int i= 0; i < hotelMap.size() ; i++) {
+					for (int j= 0; j < hotelMap.size() ; j++) {
 						if(i != j) {
-							Hotel hotel = resultHotel.get(i);
-							Hotel toCompare = resultHotel.get(j);
-							if(hotel.getName().equals(toCompare.getName())) {
-								resultHotel.remove(j);
+							try {
+								Hotel hotel = (Hotel) hotelMap.keySet().toArray()[i];
+								Hotel toCompare = (Hotel) hotelMap.keySet().toArray()[j];
+								HashMap<String, Double> agency1 = hotelMap.get(hotel);
+								String agencyUrl1 = (String) agency1.keySet().toArray()[0];
+								double discount1 = agency1.get(agencyUrl1);
+								if(hotel.getName().equals(toCompare.getName())) {
+									HashMap<String, Double> agency2 = hotelMap.get(toCompare);
+									String agencyUrl2 = (String) agency2.keySet().toArray()[0];
+									double discount2 = agency2.get(agencyUrl2);
+									if(discount1 >= discount2) {
+										hotelMap.remove(toCompare);									
+									}
+								}
+							}
+							catch (Exception e) {
+								continue;
 							}
 						}
 					}
@@ -583,7 +645,7 @@ public class ClientGUI extends JFrame {
 				double BestRate = 0;
 				String bestRateHotel = "Aucune info";
 				
-				for (Hotel key : resultHotel) {
+				for (Hotel key : hotelMap.keySet()) {
 					if(key.getStars() > BestRate) {
 						BestRate = key.getStars();
 						bestRateHotel = key.getName();
@@ -604,10 +666,12 @@ public class ClientGUI extends JFrame {
 				
 				BufferedImage firstImage = null;
 				String firstHotel = null;
-				if(!(resultHotel.isEmpty())) {
-					firstHotel = resultHotel.get(0).getImageFolder();
+				if(!(hotelMap.isEmpty())) {
+					Hotel firstHotelValue = (Hotel) hotelMap.keySet().toArray()[0]; 
+					firstHotel = firstHotelValue.getImageFolder();
 					try {
-						firstImage = ImageIO.read(new URL(firstHotel + "0" + ".jpg"));
+						System.out.println(firstHotel);
+						firstImage = ImageIO.read(new URL(firstHotel + "/" + "0" + ".jpg"));
 						if(firstImage == null) {
 							firstImage = ImageIO.read(new URL(firstHotel + "/" + "0" + ".jpg"));
 						}
@@ -627,14 +691,14 @@ public class ClientGUI extends JFrame {
 					roomHotelImage.setIcon(new ImageIcon(firstImage));
 				}
 				
-				for (Hotel hotel : resultHotel) {
+				for (Hotel hotel : hotelMap.keySet()) {
 					hotelChoice.addItem(hotel.getName());
 				}
 				
 				Hotel selectedH = null;
 				Room selectedR = null;
 				String selectedHotel = (String)hotelChoice.getSelectedItem();
-				for (Hotel key : resultHotel) {
+				for (Hotel key : hotelMap.keySet()) {
 					if(key.getName().equals(selectedHotel)) {
 						for(Room room : key.getRooms()) {
 							roomChoice.addItem(room);
@@ -649,7 +713,7 @@ public class ClientGUI extends JFrame {
 				    	String selectedHotel = (String)hotelChoice.getSelectedItem();
 				    	roomChoice.removeAllItems();
 						
-						for (Hotel key : resultHotel) {
+						for (Hotel key : hotelMap.keySet()) {
 							if(key.getName().equals(selectedHotel)) {
 								for(Room room : key.getRooms()) {
 									roomChoice.addItem(room);
@@ -658,7 +722,7 @@ public class ClientGUI extends JFrame {
 									roomSizeDisplay.setText(String.valueOf(room.getSize()) + " personne(s)");
 									BufferedImage hotelImage = null;
 									try {
-										hotelImage = ImageIO.read(new URL(key.getImageFolder() + "0" + ".jpg"));
+										hotelImage = ImageIO.read(new URL(key.getImageFolder() + "/" + "0" + ".jpg"));
 									} catch (IOException e1) {
 										e1.printStackTrace();
 									}
@@ -682,7 +746,7 @@ public class ClientGUI extends JFrame {
 						    number = m.group(1);
 						}
 						
-						for (Hotel key : resultHotel) {
+						for (Hotel key : hotelMap.keySet()) {
 							if(key.getName().equals(selectedHotel)) {
 								for(Room room : key.getRooms()) {
 									if(room.getRoomNumber() == (Integer.parseInt(number))) {
@@ -692,9 +756,9 @@ public class ClientGUI extends JFrame {
 										if(room.getRoomNumber() == (Integer.parseInt(number))) {
 											BufferedImage roomImg = null;
 											try {
-												roomImg = ImageIO.read(new URL(key.getImageFolder() + String.valueOf(room.getRoomNumber()) + ".jpg"));
+												roomImg = ImageIO.read(new URL(key.getImageFolder() + "/" + String.valueOf(room.getRoomNumber()) + ".jpg"));
 												if(roomImg == null) {
-													roomImg = ImageIO.read(new URL(key.getImageFolder() + String.valueOf(room.getRoomNumber()) + ".jpg"));
+													roomImg = ImageIO.read(new URL(key.getImageFolder() + "/" + String.valueOf(room.getRoomNumber()) + ".jpg"));
 												}
 											} catch (MalformedURLException e1) {
 												e1.printStackTrace();
@@ -827,33 +891,47 @@ public class ClientGUI extends JFrame {
 					BestRatePriceDisplay = false;
 				}
 					
-				List<Hotel> resultHotel = new ArrayList<>(); 
-				ArrayList<String> uriList = new ArrayList<>();
-				System.out.println("Results:\n");
+				HashMap<Hotel, HashMap<String, Double>> hotelMap = new HashMap<>();
 				for (String uri : URIS.keySet()) {
 					try {
 						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
 						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
 						for (Hotel hotel : returnedHotel) {
 							if(!hotel.getName().equals("Undefined")) {
-								uriList.add(uri);
-								resultHotel.add(hotel);
+								HashMap<String, Double> agencyMap = new HashMap<>();
+								int lastIndex = hotel.getImageFolder().lastIndexOf("/");
+								double discount = Double.parseDouble(hotel.getImageFolder().substring(lastIndex + 1));
+								agencyMap.put(uri, discount);
+								hotel.setImageFolder(hotel.getImageFolder().substring(0,lastIndex));
+								hotelMap.put(hotel, agencyMap);
 							}
 						}
 					}
-					catch (Exception e1) {
-						continue;
+					catch (Exception e3) {
+						e3.printStackTrace();
 					}
 				}
-					
-				for (int i= 0; i < resultHotel.size() ; i++) {
-					for (int j= 0; j < resultHotel.size() ; j++) {
+				for (int i= 0; i < hotelMap.size() ; i++) {
+					for (int j= 0; j < hotelMap.size() ; j++) {
 						if(i != j) {
-							Hotel hotel = resultHotel.get(i);
-							Hotel toCompare = resultHotel.get(j);
-							if(hotel.getName().equals(toCompare.getName())) {
-								resultHotel.remove(j);
+							try {
+								Hotel hotel = (Hotel) hotelMap.keySet().toArray()[i];
+								Hotel toCompare = (Hotel) hotelMap.keySet().toArray()[j];
+								HashMap<String, Double> agency1 = hotelMap.get(hotel);
+								String agencyUrl1 = (String) agency1.keySet().toArray()[0];
+								double discount1 = agency1.get(agencyUrl1);
+								if(hotel.getName().equals(toCompare.getName())) {
+									HashMap<String, Double> agency2 = hotelMap.get(toCompare);
+									String agencyUrl2 = (String) agency2.keySet().toArray()[0];
+									double discount2 = agency2.get(agencyUrl2);
+									if(discount1 >= discount2) {
+										hotelMap.remove(toCompare);									
+									}
+								}
 							}
+							catch (Exception e2) {
+								continue;
+							}   
 						}
 					}
 					
@@ -862,7 +940,7 @@ public class ClientGUI extends JFrame {
 				LocalDate ind = LocalDate.parse(DateIn);
 				LocalDate outd = LocalDate.parse(DateOut);
 				
-				try {
+				/*try {
 					Hotel selectedHotel = (Hotel) hotelChoice.getSelectedItem();
 					int hotelChoiceNumber = hotelChoice.getSelectedIndex();
 					Room selectedRoom = (Room) roomChoice.getSelectedItem();;
@@ -881,7 +959,7 @@ public class ClientGUI extends JFrame {
 					e3.printStackTrace();
 					System.exit(1);
 				}	
-				
+				*/
 				errorMessage.setVisible(false);
 				destinationInput.setVisible(false);
 				homeMessage.setVisible(false);

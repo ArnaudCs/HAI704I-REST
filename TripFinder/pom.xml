@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.agency</groupId>
-	<artifactId>client</artifactId>
+	<artifactId>TripFinder</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>AgencyRest</name>
 	<description>Agency client for Hotel Rest WebService</description>
