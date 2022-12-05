@@ -14,7 +14,7 @@ compile:
 	(cd Kyriad ; mvn compile)
 	(cd FormuleMtp ; mvn compile)
 
-hotels:
+max:
 	echo "[BASH] Starting 6 hotels"
 	(cd HotelRest ; mvn spring-boot:run&)
 	(cd RitzHotel ; mvn spring-boot:run&)
@@ -22,8 +22,17 @@ hotels:
 	(cd IbisWilson ; mvn spring-boot:run&)
 	(cd Kyriad ; mvn spring-boot:run&)
 	(cd FormuleMtp ; mvn spring-boot:run&)
+	echo "[BASH] Starting 3 agencies"
+	(cd AgencyRest ; mvn spring-boot:run&)
+	(cd TripFinder ; mvn spring-boot:run&)
+	(cd HotelScanner ; mvn spring-boot:run&)
 
-agencies:
+min:
+	echo "[BASH] Starting 4 hotels"
+	(cd HotelRest ; mvn spring-boot:run&)
+	(cd RitzHotel ; mvn spring-boot:run&)
+	(cd Formule1 ; mvn spring-boot:run&)
+	(cd IbisWilson ; mvn spring-boot:run&)
 	echo "[BASH] Starting 3 agencies"
 	(cd AgencyRest ; mvn spring-boot:run&)
 	(cd TripFinder ; mvn spring-boot:run&)
@@ -32,13 +41,24 @@ agencies:
 comparator:
 	(cd Comparator ; mvn spring-boot:run)
 
-gui:
-	(cd Client ; mvn exec:java@AgencyGUI)
-
 clean:
-	find ./HotelRest/target -mindepth 1 ! -regex '^./HotelRest/target/classes\(/.*\)?' -delete
-	find ./HotelRest/target/classes -mindepth 1 ! -regex '^./HotelRest/target/classes/META-INF\(/.*\)?' -delete
-	find ./RitzHotel/target -mindepth 1 ! -regex '^./RitzHotel/target/classes\(/.*\)?' -delete
-	find ./RitzHotel/target/classes -mindepth 1 ! -regex '^./RitzHotel/target/classes/META-INF\(/.*\)?' -delete
-	find ./AgencyRest/target -mindepth 1 ! -regex '^./AgencyRest/target/classes\(/.*\)?' -delete
-	find ./AgencyRest/target/classes -mindepth 1 ! -regex '^./AgencyRest/target/classes/META-INF\(/.*\)?' -delete
+	(pkill -9 -f AgencyRest&)
+	(pkill -9 -f HotelRest&)
+	(pkill -9 -f RitzHotel&)
+	(pkill -9 -f Formule1&)
+	(pkill -9 -f IbisWilson&)
+	(pkill -9 -f TripFinder&)
+	(pkill -9 -f HotelScanner&)
+	(pkill -9 -f Comparator&)
+	(pkill -9 -f Kyriad&)
+	(pkill -9 -f FormuleMtp&)
+	(cd AgencyRest ; mvn clean)
+	(cd HotelRest ; mvn clean)
+	(cd RitzHotel ; mvn clean)
+	(cd Formule1 ; mvn clean)
+	(cd IbisWilson ; mvn clean)
+	(cd TripFinder ; mvn clean)
+	(cd HotelScanner ; mvn clean)
+	(cd Comparator ; mvn clean)
+	(cd Kyriad ; mvn clean)
+	(cd FormuleMtp ; mvn clean)
