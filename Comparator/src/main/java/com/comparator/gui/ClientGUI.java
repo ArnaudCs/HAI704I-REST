@@ -360,10 +360,17 @@ public class ClientGUI extends JFrame {
 		departureLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		
 		JLabel simplePub = new JLabel("");
-		simplePub.setIcon(new ImageIcon("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\banniere.png"));
 		simplePub.setBounds(35, 31, 1055, 90);
 		contentPane.add(simplePub);
 		simplePub.setVisible(false);
+		BufferedImage banner = null;
+		try {
+			banner = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/banniere.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		simplePub.setIcon(new ImageIcon(banner));
 		
 		JLabel returnDateLabel = new JLabel("Date de retour");
 		returnDateLabel.setBounds(435, 500, 138, 24);
@@ -653,7 +660,6 @@ public class ClientGUI extends JFrame {
 									try {
 										hotelImage = ImageIO.read(new URL(key.getImageFolder() + "0" + ".jpg"));
 									} catch (IOException e1) {
-										// TODO Auto-generated catch block
 										e1.printStackTrace();
 									}
 									roomHotelImage.setIcon(new ImageIcon(hotelImage));
