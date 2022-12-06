@@ -13,6 +13,7 @@ compile:
 	(cd Comparator ; mvn compile)
 	(cd Kyriad ; mvn compile)
 	(cd FormuleMtp ; mvn compile)
+	echo "[BASH] Compilation done"
 
 max:
 	echo "[BASH] Starting 6 hotels"

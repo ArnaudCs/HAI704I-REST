@@ -238,12 +238,16 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 						selectedHotel.getResa().add(resa);
 						// probleme ici
 						String agencyURI = "";
+						double discount = 0;
 						for(Entry<Hotel, HashMap<String, Double>> map: hotelMap.entrySet()) {
 							if(map.getKey().equals(selectedHotel)) {
 								agencyURI = (String) map.getValue().keySet().toArray()[0];
+								discount = map.getValue().get(agencyURI);
 								break;
 							}
 						}
+						double newPrice = selectedRoom.getPrice() * discount;
+						resa.setAmount(newPrice);
 						String url = agencyURI + "/resa/" + String.valueOf(selectedHotel.getId());
 						proxy.put(url, selectedHotel);
 						System.out.println("Your order have been placed. Thank you for your purchase !\n");
