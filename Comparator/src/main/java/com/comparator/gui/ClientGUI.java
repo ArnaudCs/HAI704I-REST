@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
@@ -26,6 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
@@ -57,6 +59,12 @@ public class ClientGUI extends JFrame {
 	private JTextField dateOut;
 	private JTextField dateIn;
 	private JCheckBox AgencyCheck2;
+	private JTextField reservationName;
+	private JTextField reservationFirstName;
+	private JTextField phoneNumberReservation;
+	private JTextField cardNumberReservation;
+	private JTextField cardCVVReservation;
+	private JTextField cardExpirationReservation;
 	
 	
 
@@ -93,6 +101,201 @@ public class ClientGUI extends JFrame {
 		hotelChoice.setMaximumRowCount(30);
 		hotelChoice.setModel(new DefaultComboBoxModel(new String[] {}));
 		hotelChoice.setVisible(false);
+		
+		BufferedImage inputFirstName = null;
+		try {
+			inputFirstName = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/input.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		JLabel clientInfos = new JLabel("");
+		clientInfos.setHorizontalAlignment(SwingConstants.CENTER);
+		clientInfos.setForeground(Color.WHITE);
+		clientInfos.setFont(new Font("Tahoma", Font.BOLD, 20));
+		clientInfos.setBounds(410, 344, 300, 24);
+		contentPane.add(clientInfos);
+		clientInfos.setVisible(false);
+		
+		JLabel reservedRoom = new JLabel("");
+		reservedRoom.setHorizontalAlignment(SwingConstants.CENTER);
+		reservedRoom.setForeground(Color.WHITE);
+		reservedRoom.setFont(new Font("Tahoma", Font.BOLD, 20));
+		reservedRoom.setBounds(410, 295, 300, 24);
+		contentPane.add(reservedRoom);
+		reservedRoom.setVisible(false);
+		
+		JLabel reservedHotel = new JLabel("");
+		reservedHotel.setHorizontalAlignment(SwingConstants.CENTER);
+		reservedHotel.setForeground(new Color(255, 255, 255));
+		reservedHotel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		reservedHotel.setBounds(410, 243, 300, 24);
+		contentPane.add(reservedHotel);
+		reservedHotel.setVisible(false);
+		
+		JLabel roomNumber = new JLabel("");
+		roomNumber.setEnabled(false);
+		roomNumber.setBounds(984, 180, 45, 13);
+		contentPane.add(roomNumber);
+		roomNumber.setOpaque(false);
+		
+		JLabel hotelName = new JLabel("");
+		hotelName.setEnabled(false);
+		hotelName.setBounds(984, 156, 45, 13);
+		contentPane.add(hotelName);
+		hotelName.setOpaque(false);
+		
+		phoneNumberReservation = new JTextField();
+		phoneNumberReservation.setFont(new Font("Tahoma", Font.BOLD, 15));
+		phoneNumberReservation.setBounds(573, 368, 173, 24);
+		contentPane.add(phoneNumberReservation);
+		phoneNumberReservation.setColumns(10);
+		phoneNumberReservation.setVisible(false);
+		phoneNumberReservation.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		phoneNumberReservation.setOpaque(false);
+		
+		cardNumberReservation = new JTextField();
+		cardNumberReservation.setFont(new Font("Tahoma", Font.BOLD, 15));
+		cardNumberReservation.setBounds(573, 308, 173, 24);
+		contentPane.add(cardNumberReservation);
+		cardNumberReservation.setColumns(10);
+		cardNumberReservation.setVisible(false);
+		cardNumberReservation.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cardNumberReservation.setOpaque(false);
+		
+		cardCVVReservation = new JTextField();
+		cardCVVReservation.setFont(new Font("Tahoma", Font.BOLD, 15));
+		cardCVVReservation.setColumns(10);
+		cardCVVReservation.setBounds(573, 488, 173, 24);
+		contentPane.add(cardCVVReservation);
+		cardCVVReservation.setVisible(false);
+		cardCVVReservation.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cardCVVReservation.setOpaque(false);
+		
+		cardExpirationReservation = new JTextField();
+		cardExpirationReservation.setFont(new Font("Tahoma", Font.BOLD, 15));
+		cardExpirationReservation.setColumns(10);
+		cardExpirationReservation.setBounds(573, 428, 173, 24);
+		contentPane.add(cardExpirationReservation);
+		cardExpirationReservation.setVisible(false);
+		cardExpirationReservation.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cardExpirationReservation.setOpaque(false);
+		
+		JLabel cvvLabel = new JLabel("CVV");
+		cvvLabel.setForeground(Color.WHITE);
+		cvvLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		cvvLabel.setBounds(440, 490, 107, 24);
+		contentPane.add(cvvLabel);
+		cvvLabel.setVisible(false);
+		
+		JLabel cardExpirationLabel = new JLabel("Expiration");
+		cardExpirationLabel.setForeground(Color.WHITE);
+		cardExpirationLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		cardExpirationLabel.setBounds(420, 430, 107, 24);
+		contentPane.add(cardExpirationLabel);
+		cardExpirationLabel.setVisible(false);
+		
+		JLabel phoneNumberLabel = new JLabel("Téléphone");
+		phoneNumberLabel.setForeground(Color.WHITE);
+		phoneNumberLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		phoneNumberLabel.setBounds(420, 310, 107, 24);
+		contentPane.add(phoneNumberLabel);
+		phoneNumberLabel.setVisible(false);
+		
+		JLabel cardNumberLabel = new JLabel("Numéro Carte");
+		cardNumberLabel.setForeground(Color.WHITE);
+		cardNumberLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		cardNumberLabel.setBounds(400, 370, 150, 24);
+		contentPane.add(cardNumberLabel);
+		cardNumberLabel.setVisible(false);
+		
+		JLabel firstNameLabel = new JLabel("Prénom");
+		firstNameLabel.setForeground(Color.WHITE);
+		firstNameLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		firstNameLabel.setBounds(430, 250, 107, 24);
+		contentPane.add(firstNameLabel);
+		firstNameLabel.setVisible(false);
+		
+		JLabel reservationNameLabel = new JLabel("Nom");
+		reservationNameLabel.setForeground(new Color(255, 255, 255));
+		reservationNameLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		reservationNameLabel.setBounds(440, 192, 107, 24);
+		contentPane.add(reservationNameLabel);
+		reservationNameLabel.setVisible(false);
+		
+		JLabel cardNumberCover = new JLabel("");
+		cardNumberCover.setBounds(560, 360, 200, 40);
+		contentPane.add(cardNumberCover);
+		cardNumberCover.setIcon(new ImageIcon(inputFirstName));
+		cardNumberCover.setVisible(false);
+		
+		JLabel cardCVVCover = new JLabel("");
+		cardCVVCover.setBounds(560, 480, 200, 40);
+		contentPane.add(cardCVVCover);
+		cardCVVCover.setIcon(new ImageIcon(inputFirstName));
+		cardCVVCover.setVisible(false);
+		
+		JLabel cardExpirationCover = new JLabel("");
+		cardExpirationCover.setBounds(560, 420, 200, 40);
+		contentPane.add(cardExpirationCover);
+		cardExpirationCover.setIcon(new ImageIcon(inputFirstName));
+		cardExpirationCover.setVisible(false);
+		
+		JLabel phoneCover = new JLabel("");
+		phoneCover.setBounds(560, 300, 200, 40);
+		contentPane.add(phoneCover);
+		phoneCover.setIcon(new ImageIcon(inputFirstName));
+		phoneCover.setVisible(false);
+		
+		JButton payBtn = new JButton("");
+		payBtn.setBounds(500, 560, 148, 42);
+		contentPane.add(payBtn);
+		payBtn.setVisible(false);
+		payBtn.setContentAreaFilled(false);
+		payBtn.setBorderPainted(false);
+		
+		JLabel payBtnCover = new JLabel("");
+		payBtnCover.setBounds(485, 560, 180, 40);
+		contentPane.add(payBtnCover);
+		payBtnCover.setVisible(false);
+		BufferedImage payCover = null;
+		try {
+			payCover = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/Payer.png"));
+		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		payBtnCover.setIcon(new ImageIcon(payCover));
+		
+		reservationFirstName = new JTextField();
+		reservationFirstName.setFont(new Font("Tahoma", Font.BOLD, 15));
+		reservationFirstName.setColumns(10);
+		reservationFirstName.setBounds(573, 248, 173, 24);
+		contentPane.add(reservationFirstName);
+		reservationFirstName.setVisible(false);
+		reservationFirstName.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		reservationFirstName.setOpaque(false);
+		
+		reservationName = new JTextField();
+		reservationName.setFont(new Font("Tahoma", Font.BOLD, 15));
+		reservationName.setBounds(573, 189, 173, 24);
+		contentPane.add(reservationName);
+		reservationName.setColumns(10);
+		reservationName.setVisible(false);
+		reservationName.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		reservationName.setOpaque(false);
+		JLabel firstNameCover = new JLabel("");
+		firstNameCover.setBounds(560, 180, 200, 40);
+		contentPane.add(firstNameCover);
+		firstNameCover.setVisible(false);
+		firstNameCover.setIcon(new ImageIcon(inputFirstName));
+		
+		JLabel nameCover = new JLabel("");
+		nameCover.setBounds(560, 240, 200, 40);
+		contentPane.add(nameCover);
+		nameCover.setVisible(false);
+		nameCover.setIcon(new ImageIcon(inputFirstName));
 		hotelChoice.setBounds(103, 236, 269, 27);
 		contentPane.add(hotelChoice);
 
@@ -223,6 +426,7 @@ public class ClientGUI extends JFrame {
 		errorMessage.setHorizontalAlignment(SwingConstants.CENTER);
 		errorMessage.setBounds(264, 637, 621, 36);
 		contentPane.add(errorMessage);
+		errorMessage.setText("Veuillez selectionner au moins une agence");
 		
 		JSlider priceSelector = new JSlider();
 		priceSelector.setMinimum(10);
@@ -272,7 +476,7 @@ public class ClientGUI extends JFrame {
 		JButton searchButton = new JButton("");
 		searchButton.setBounds(500, 573, 148, 42);
 		searchButton.setForeground(new Color(255, 255, 255));
-		searchButton.setVisible(false);
+		searchButton.setEnabled(false);
 		
 		JLabel homeMessage = new JLabel("Indiquez une destination ...");
 		homeMessage.setBounds(450, 156, 240, 42);
@@ -322,7 +526,6 @@ public class ClientGUI extends JFrame {
 			e1.printStackTrace();
 		}
 		searchButtonBackground.setIcon(new ImageIcon(img4));
-		searchButtonBackground.setVisible(false);
 		
 		JLabel personNumberLabel = new JLabel("Nombre de Personnes : ");
 		personNumberLabel.setBounds(340, 261, 234, 24);
@@ -434,6 +637,14 @@ public class ClientGUI extends JFrame {
 		starsNumberLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		contentPane.add(starsNumberLabel);
 		
+		JLabel paymentInfoTitle = new JLabel("- Informations de commande -");
+		paymentInfoTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		paymentInfoTitle.setForeground(new Color(255, 255, 255));
+		paymentInfoTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
+		paymentInfoTitle.setBounds(320, 100, 500, 30);
+		contentPane.add(paymentInfoTitle);
+		paymentInfoTitle.setVisible(false);
+		
 		JLabel roomSizeDisplay = new JLabel("");
 		roomSizeDisplay.setFont(new Font("Tahoma", Font.BOLD, 17));
 		roomSizeDisplay.setForeground(new Color(255, 255, 255));
@@ -494,13 +705,13 @@ public class ClientGUI extends JFrame {
 		 });
 		
 		AgencyCheck1.addActionListener (new ActionListener () {
-		    public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 		    	if(AgencyCheck1.isSelected()) {
-		    		searchButton.setVisible(true);
-		    		searchButtonBackground.setVisible(true);
+		    		searchButton.setEnabled(true);
+		    		errorMessage.setText("");
 		    	}else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
-		    		searchButton.setVisible(false);
-		    		searchButtonBackground.setVisible(false);
+		    		searchButton.setEnabled(false);
+		    		errorMessage.setText("Veuillez selectionner au moins une agence");
 		    	}
 		    }
 		});
@@ -508,11 +719,11 @@ public class ClientGUI extends JFrame {
 		AgencyCheck2.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		    	if(AgencyCheck2.isSelected()) {
-		    		searchButton.setVisible(true);
-		    		searchButtonBackground.setVisible(true);
+		    		searchButton.setEnabled(true);
+		    		errorMessage.setText("");
 		    	}else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
-		    		searchButton.setVisible(false);
-		    		searchButtonBackground.setVisible(false);
+		    		searchButton.setEnabled(false);
+		    		errorMessage.setText("Veuillez selectionner au moins une agence");
 		    	}
 		    }
 		});
@@ -520,11 +731,11 @@ public class ClientGUI extends JFrame {
 		AgencyCheck3.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		    	if(AgencyCheck3.isSelected()) {
-		    		searchButton.setVisible(true);
-		    		searchButtonBackground.setVisible(true);
+		    		searchButton.setEnabled(true);
+		    		errorMessage.setText("");
 		    	}else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
-		    		searchButton.setVisible(false);
-		    		searchButtonBackground.setVisible(false);
+		    		searchButton.setEnabled(false);
+		    		errorMessage.setText("Veuillez selectionner au moins une agence");
 		    	}
 		    }
 		});
@@ -535,7 +746,6 @@ public class ClientGUI extends JFrame {
 				String SERVICE_URL2 = "http://localhost:30007/hotelorg/api/" ;
 				String SERVICE_URL3 = "http://localhost:30008/hotelscanner/api/";
 				boolean BestRatePriceDisplay = false;
-				boolean noSelection = true;
 				
 				String URI_HOTEL = "agency";
 				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
@@ -555,43 +765,34 @@ public class ClientGUI extends JFrame {
 				params.put("rating", String.valueOf(stars));
 				params.put("price", String.valueOf(price));
 				
-				while(noSelection) {
-					if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
-						errorMessage.setText("Veuillez selectionner au moins une agence");
-					} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected()&& AgencyCheck3.isSelected()){
-						URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-						URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-						URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-						BestRatePriceDisplay = true;
-						noSelection = false;
-					} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
-						URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-						URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-						BestRatePriceDisplay = true;
-						noSelection = false;
-					} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
-						URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-						URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-						BestRatePriceDisplay = true;
-						noSelection = false;
-					} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected()&& !(AgencyCheck3.isSelected())) {
-						URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-						URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-						BestRatePriceDisplay = true;
-						noSelection = false;
-					} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
-						URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-						BestRatePriceDisplay = false;
-						noSelection = false;
-					} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
-						URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-						BestRatePriceDisplay = false;
-						noSelection = false;
-					} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
-						URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-						BestRatePriceDisplay = false;
-						noSelection = false;
-					}
+				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
+					errorMessage.setText("Veuillez selectionner au moins une agence");
+				} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && AgencyCheck3.isSelected()){
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
 				}
 					
 				HashMap<Hotel, HashMap<String, Double>> hotelMap = new HashMap<>();
@@ -715,6 +916,7 @@ public class ClientGUI extends JFrame {
 						
 						for (Hotel key : hotelMap.keySet()) {
 							if(key.getName().equals(selectedHotel)) {
+								hotelName.setText((String) hotelChoice.getSelectedItem());
 								for(Room room : key.getRooms()) {
 									roomChoice.addItem(room);
 									roomNumberDisplay.setText(String.valueOf(room.getRoomNumber()));
@@ -753,6 +955,9 @@ public class ClientGUI extends JFrame {
 										roomNumberDisplay.setText(String.valueOf(room.getRoomNumber()));
 										roomPriceDisplay.setText(String.valueOf(room.getPrice()) + "€");
 										roomSizeDisplay.setText(String.valueOf(room.getSize()) + " personne(s)");
+										
+										roomNumber.setText(String.valueOf(room.getRoomNumber()));
+										
 										if(room.getRoomNumber() == (Integer.parseInt(number))) {
 											BufferedImage roomImg = null;
 											try {
@@ -833,133 +1038,13 @@ public class ClientGUI extends JFrame {
 				checkoutBtn.setVisible(true);
 				checkoutBtnCover.setVisible(true);
 				roomInfoSeparator.setVisible(true);
+				hotelName.setVisible(false);
+				roomNumber.setVisible(false);
 			}
 		});
 		
 		checkoutBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String SERVICE_URL1 = "http://localhost:30009/tripfinder/api/";
-				String SERVICE_URL2 = "http://localhost:30007/hotelorg/api/" ;
-				String SERVICE_URL3 = "http://localhost:30008/hotelscanner/api/";
-				boolean BestRatePriceDisplay = false;
-				
-				String URI_HOTEL = "agency";
-				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
-				Map<String, String> URIS = new HashMap<String, String>();
-				
-				String destination = destinationInput.getText();
-				String DateIn = dateIn.getText();
-				String DateOut = dateOut.getText();
-				int price = Integer.valueOf(priceSelector.getValue());;
-				int bedNumber = Integer.valueOf(personNumberInput.getText());
-				int stars = starsSelector.getSelectedIndex() + 1;
-				Map<String, String> params = new HashMap<>();
-				params.put("position", destination);
-				params.put("datein", DateIn);
-				params.put("dateout", DateOut);
-				params.put("size", String.valueOf(bedNumber));
-				params.put("rating", String.valueOf(stars));
-				params.put("price", String.valueOf(price));
-				
-				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
-					errorMessage.setText("Veuillez selectionner au moins une agence");
-				} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected()&& AgencyCheck3.isSelected()){
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected()&& !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = true;
-				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
-				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
-					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
-				} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
-					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
-					BestRatePriceDisplay = false;
-				}
-					
-				HashMap<Hotel, HashMap<String, Double>> hotelMap = new HashMap<>();
-				for (String uri : URIS.keySet()) {
-					try {
-						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
-						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
-						for (Hotel hotel : returnedHotel) {
-							if(!hotel.getName().equals("Undefined")) {
-								HashMap<String, Double> agencyMap = new HashMap<>();
-								int lastIndex = hotel.getImageFolder().lastIndexOf("/");
-								double discount = Double.parseDouble(hotel.getImageFolder().substring(lastIndex + 1));
-								agencyMap.put(uri, discount);
-								hotel.setImageFolder(hotel.getImageFolder().substring(0,lastIndex));
-								hotelMap.put(hotel, agencyMap);
-							}
-						}
-					}
-					catch (Exception e3) {
-						e3.printStackTrace();
-					}
-				}
-				for (int i= 0; i < hotelMap.size() ; i++) {
-					for (int j= 0; j < hotelMap.size() ; j++) {
-						if(i != j) {
-							try {
-								Hotel hotel = (Hotel) hotelMap.keySet().toArray()[i];
-								Hotel toCompare = (Hotel) hotelMap.keySet().toArray()[j];
-								HashMap<String, Double> agency1 = hotelMap.get(hotel);
-								String agencyUrl1 = (String) agency1.keySet().toArray()[0];
-								double discount1 = agency1.get(agencyUrl1);
-								if(hotel.getName().equals(toCompare.getName())) {
-									HashMap<String, Double> agency2 = hotelMap.get(toCompare);
-									String agencyUrl2 = (String) agency2.keySet().toArray()[0];
-									double discount2 = agency2.get(agencyUrl2);
-									if(discount1 >= discount2) {
-										hotelMap.remove(toCompare);									
-									}
-								}
-							}
-							catch (Exception e2) {
-								continue;
-							}   
-						}
-					}
-					
-				}
-				
-				LocalDate ind = LocalDate.parse(DateIn);
-				LocalDate outd = LocalDate.parse(DateOut);
-				
-				/*try {
-					Hotel selectedHotel = (Hotel) hotelChoice.getSelectedItem();
-					int hotelChoiceNumber = hotelChoice.getSelectedIndex();
-					Room selectedRoom = (Room) roomChoice.getSelectedItem();;
-					BufferedReader reader = null; // Je ne comprends pas à quoi sert Reader
-					Reservation resa = MainFunctions.makeReservation(reader, ind, outd, selectedRoom, selectedHotel, selectedRoom.getPrice());
-					selectedHotel.setResa(new ArrayList<>());
-					selectedHotel.getResa().add(resa);
-					String agencyURI = uriList.get(hotelChoiceNumber) + "/resa/" + String.valueOf(selectedHotel.getId());
-
-					proxy.put(agencyURI, selectedHotel);
-					System.out.println("Your order have been placed. Thank you for your purchase !\n");
-					MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
-					MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);
-					
-				} catch (ReservationException e3) {
-					e3.printStackTrace();
-					System.exit(1);
-				}	
-				*/
+			public void actionPerformed(ActionEvent e) {	
 				errorMessage.setVisible(false);
 				destinationInput.setVisible(false);
 				homeMessage.setVisible(false);
@@ -1016,7 +1101,223 @@ public class ClientGUI extends JFrame {
 				checkoutBtn.setVisible(false);
 				checkoutBtnCover.setVisible(false);
 				roomInfoSeparator.setVisible(false);
+				payBtn.setVisible(true);
+				payBtnCover.setVisible(true);
+				firstNameCover.setVisible(true);
+				nameCover.setVisible(true);
+				reservationName.setVisible(true);
+				reservationFirstName.setVisible(true);
 				errorMessage.setText("");
+				
+				cvvLabel.setVisible(true);
+				cardExpirationLabel.setVisible(true);
+				phoneNumberLabel.setVisible(true);
+				cardNumberLabel.setVisible(true);
+				firstNameLabel.setVisible(true);
+				reservationNameLabel.setVisible(true);
+				cardNumberCover.setVisible(true);
+				cardCVVCover.setVisible(true);
+				cardExpirationCover.setVisible(true);
+				phoneCover.setVisible(true);
+				phoneNumberReservation.setVisible(true);
+				cardNumberReservation.setVisible(true);
+				cardCVVReservation.setVisible(true);
+				cardExpirationReservation.setVisible(true);
+				hotelName.setVisible(false);
+				roomNumber.setVisible(false);
+				paymentInfoTitle.setVisible(true);
+			}
+		});
+		
+		payBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String SERVICE_URL1 = "http://localhost:30009/tripfinder/api/";
+				String SERVICE_URL2 = "http://localhost:30007/hotelorg/api/" ;
+				String SERVICE_URL3 = "http://localhost:30008/hotelscanner/api/";
+				boolean BestRatePriceDisplay = false;
+				
+				String URI_HOTEL = "agency";
+				String URI_HOTEL_ID = URI_HOTEL + "/{id}";
+				Map<String, String> URIS = new HashMap<String, String>();
+				
+				String destination = destinationInput.getText();
+				String DateIn = dateIn.getText();
+				String DateOut = dateOut.getText();
+				int price = Integer.valueOf(priceSelector.getValue());;
+				int bedNumber = Integer.valueOf(personNumberInput.getText());
+				int stars = starsSelector.getSelectedIndex() + 1;
+				Map<String, String> params = new HashMap<>();
+				params.put("position", destination);
+				params.put("datein", DateIn);
+				params.put("dateout", DateOut);
+				params.put("size", String.valueOf(bedNumber));
+				params.put("rating", String.valueOf(stars));
+				params.put("price", String.valueOf(price));
+				
+				if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected())&& !(AgencyCheck3.isSelected())) {
+					errorMessage.setText("Veuillez selectionner au moins une agence");
+				} else if (AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && AgencyCheck3.isSelected()){
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = true;
+				} else if(AgencyCheck1.isSelected() && !(AgencyCheck2.isSelected()) && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL1 + URI_HOTEL, SERVICE_URL1 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && AgencyCheck2.isSelected() && !(AgencyCheck3.isSelected())) {
+					URIS.put(SERVICE_URL2 + URI_HOTEL, SERVICE_URL2 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				} else if(!(AgencyCheck1.isSelected()) && !(AgencyCheck2.isSelected()) && AgencyCheck3.isSelected()) {
+					URIS.put(SERVICE_URL3 + URI_HOTEL, SERVICE_URL3 + URI_HOTEL + URI_HOTEL_ID);
+					BestRatePriceDisplay = false;
+				}
+					
+				HashMap<Hotel, HashMap<String, Double>> hotelMap = new HashMap<>();
+				for (String uri : URIS.keySet()) {
+					try {
+						String url = uri + "/search?position={position}&size={size}&rating={rating}&datein={datein}&dateout={dateout}&price={price}";
+						Hotel[] returnedHotel = proxy.getForObject(url, Hotel[].class, params);
+						for (Hotel hotel : returnedHotel) {
+							if(!hotel.getName().equals("Undefined")) {
+								HashMap<String, Double> agencyMap = new HashMap<>();
+								int lastIndex = hotel.getImageFolder().lastIndexOf("/");
+								double discount = Double.parseDouble(hotel.getImageFolder().substring(lastIndex + 1));
+								agencyMap.put(uri, discount);
+								hotel.setImageFolder(hotel.getImageFolder().substring(0,lastIndex));
+								hotelMap.put(hotel, agencyMap);
+							}
+						}
+					}
+					catch (Exception e12) {
+						e12.printStackTrace();
+					}
+				}
+				for (int i= 0; i < hotelMap.size() ; i++) {
+					for (int j= 0; j < hotelMap.size() ; j++) {
+						if(i != j) {
+							try {
+								Hotel hotel = (Hotel) hotelMap.keySet().toArray()[i];
+								Hotel toCompare = (Hotel) hotelMap.keySet().toArray()[j];
+								HashMap<String, Double> agency1 = hotelMap.get(hotel);
+								String agencyUrl1 = (String) agency1.keySet().toArray()[0];
+								double discount1 = agency1.get(agencyUrl1);
+								if(hotel.getName().equals(toCompare.getName())) {
+									HashMap<String, Double> agency2 = hotelMap.get(toCompare);
+									String agencyUrl2 = (String) agency2.keySet().toArray()[0];
+									double discount2 = agency2.get(agencyUrl2);
+									if(discount1 >= discount2) {
+										hotelMap.remove(toCompare);									
+									}
+								}
+							}
+							catch (Exception e11) {
+								continue;
+							}
+						}
+					}
+					
+				}
+				
+				LocalDate ind = LocalDate.parse(DateIn);
+				LocalDate outd = LocalDate.parse(DateOut);
+				String firstname = reservationFirstName.getText();
+				String name = reservationName.getText();
+				
+				int roomNumberChoice = Integer.valueOf(roomNumber.getText());
+				String hotelNameChoice = hotelName.getText();
+				
+				Hotel selectedHotel = null;
+				Room selectedRoom = null;
+				
+				for (Hotel key : hotelMap.keySet()) {
+					if(key.getName().equals(hotelNameChoice)) {
+						selectedHotel = key;
+						for(Room room : key.getRooms()) {
+							if(room.getRoomNumber() == roomNumberChoice) {
+								selectedRoom = room;
+							}
+						}
+					}
+				}
+
+				int lastIndex = selectedHotel.getImageFolder().lastIndexOf("/");				
+				double discount = 0;
+				for(Entry<Hotel, HashMap<String, Double>> map: hotelMap.entrySet()) {
+					if(map.getKey().equals(selectedHotel)) {
+						String agencyURI = (String) map.getValue().keySet().toArray()[0];
+						discount = map.getValue().get(agencyURI);
+						break;
+					}
+				}
+				
+				int hotelChoiceNumber = hotelChoice.getSelectedIndex();
+				
+				Reservation resa = new Reservation(firstname + " " + name, ind, outd, discount, selectedRoom, selectedHotel);
+				selectedHotel.setResa(new ArrayList<>());
+				selectedHotel.getResa().add(resa);
+				String agencyURI = "";
+				for(Entry<Hotel, HashMap<String, Double>> map: hotelMap.entrySet()) {
+					if(map.getKey().equals(selectedHotel)) {
+						agencyURI = (String) map.getValue().keySet().toArray()[0];
+						break;
+					}
+				}
+				String url = agencyURI + "/resa/" + String.valueOf(selectedHotel.getId());
+				proxy.put(url, selectedHotel);
+				System.out.println("Your order have been placed. Thank you for your purchase !\n");
+				MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
+				MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);		
+				
+				payBtn.setVisible(false);
+				payBtnCover.setVisible(false);
+				firstNameCover.setVisible(false);
+				nameCover.setVisible(false);
+				reservationName.setVisible(false);
+				reservationFirstName.setVisible(false);
+				
+				cvvLabel.setVisible(false);
+				cardExpirationLabel.setVisible(false);
+				phoneNumberLabel.setVisible(false);
+				cardNumberLabel.setVisible(false);
+				firstNameLabel.setVisible(false);
+				reservationNameLabel.setVisible(false);
+				cardNumberCover.setVisible(false);
+				cardCVVCover.setVisible(false);
+				cardExpirationCover.setVisible(false);
+				phoneCover.setVisible(false);
+				phoneNumberReservation.setVisible(false);
+				cardNumberReservation.setVisible(false);
+				cardCVVReservation.setVisible(false);
+				cardExpirationReservation.setVisible(false);
+				
+				errorMessage.setVisible(true);
+				errorMessage.setForeground(Color.green);
+				errorMessage.setText("Réservation réussie");
+				quitCover.setVisible(true);
+				exitBtn.setVisible(true);
+				
+				JOptionPane.showMessageDialog(null, 
+                        "Votre commande est validée, une facture au format PDF à été enregistrée sur votre ordinateur dans le dossier \"Comparateur\"", 
+                url, JOptionPane.WARNING_MESSAGE);
+				
+				reservedHotel.setText(hotelNameChoice);
+				reservedRoom.setText(String.valueOf(selectedRoom));
+				clientInfos.setText(firstname + " " + name);
+				reservedRoom.setVisible(true);
+				reservedHotel.setVisible(true);
+				clientInfos.setVisible(true);
 			}
 		});
 		
@@ -1157,5 +1458,7 @@ public class ClientGUI extends JFrame {
 		contentPane.add(backgroundSearch);
 		background.setIcon(new ImageIcon(img));
 		contentPane.add(background);
+		
+		
 	}
 }
