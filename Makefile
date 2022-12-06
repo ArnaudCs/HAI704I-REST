@@ -42,6 +42,18 @@ min:
 comparator:
 	(cd Comparator ; mvn spring-boot:run)
 
+stop:
+	(pkill -9 -f AgencyRest&)
+	(pkill -9 -f HotelRest&)
+	(pkill -9 -f RitzHotel&)
+	(pkill -9 -f Formule1&)
+	(pkill -9 -f IbisWilson&)
+	(pkill -9 -f TripFinder&)
+	(pkill -9 -f HotelScanner&)
+	(pkill -9 -f Comparator&)
+	(pkill -9 -f Kyriad&)
+	(pkill -9 -f FormuleMtp&)
+
 clean:
 	(pkill -9 -f AgencyRest&)
 	(pkill -9 -f HotelRest&)

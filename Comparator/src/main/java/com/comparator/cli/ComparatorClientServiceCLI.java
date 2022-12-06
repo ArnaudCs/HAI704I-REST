@@ -134,9 +134,9 @@ public class ComparatorClientServiceCLI extends AbstractMain implements CommandL
 				System.out.println("\nPrice: ");
 				double price = Double.parseDouble(reader.readLine());
 				System.out.println("\nDate in (yyyy-mm-dd): ");
-				String inDate = "2022-05-05";
+				String inDate = reader.readLine();
 				System.out.println("\nDate out (yyyy-mm-dd): ");
-				String outDate = "2022-05-06";
+				String outDate = reader.readLine();
 				System.out.println("\nNumber of persons: ");
 				int size = Integer.parseInt(reader.readLine());
 				params.put("position", position);
