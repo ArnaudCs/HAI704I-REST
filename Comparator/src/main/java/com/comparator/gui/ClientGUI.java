@@ -3,6 +3,7 @@ package com.comparator.gui;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Taskbar;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,7 +90,19 @@ public class ClientGUI extends JFrame {
 	 */
 	public ClientGUI(RestTemplate proxy) {
 		setResizable(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\arnau\\Desktop\\HAI704I-REST\\Media\\logo.png"));
+		BufferedImage icon = null;
+		try {
+			icon = ImageIO.read(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/logo.png"));
+			setIconImage(Toolkit.getDefaultToolkit().getImage(new URL("http://hotelfinder.sc1samo7154.universe.wf/gui/logo.png")));
+			Taskbar.getTaskbar().setIconImage(icon);
+		} catch (MalformedURLException e1) {
+			
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		catch (UnsupportedOperationException e2) {
+			
+		}
 		setTitle("HotelAdvisor - Comparateur");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1143, 743);
@@ -871,7 +884,6 @@ public class ClientGUI extends JFrame {
 					Hotel firstHotelValue = (Hotel) hotelMap.keySet().toArray()[0]; 
 					firstHotel = firstHotelValue.getImageFolder();
 					try {
-						System.out.println(firstHotel);
 						firstImage = ImageIO.read(new URL(firstHotel + "/" + "0" + ".jpg"));
 						if(firstImage == null) {
 							firstImage = ImageIO.read(new URL(firstHotel + "/" + "0" + ".jpg"));
@@ -895,7 +907,7 @@ public class ClientGUI extends JFrame {
 				for (Hotel hotel : hotelMap.keySet()) {
 					hotelChoice.addItem(hotel.getName());
 				}
-				
+				roomChoice.removeAllItems();
 				Hotel selectedH = null;
 				Room selectedR = null;
 				String selectedHotel = (String)hotelChoice.getSelectedItem();
@@ -934,6 +946,7 @@ public class ClientGUI extends JFrame {
 						}
 				    }
 				});
+
 				
 				roomChoice.addActionListener (new ActionListener () {
 				    public void actionPerformed(ActionEvent e) {
@@ -1276,7 +1289,6 @@ public class ClientGUI extends JFrame {
 				}
 				String url = agencyURI + "/resa/" + String.valueOf(selectedHotel.getId());
 				proxy.put(url, selectedHotel);
-				System.out.println("Your order have been placed. Thank you for your purchase !\n");
 				MainFunctions.getRecipe(selectedHotel, resa.getClient(), resa);
 				MainFunctions.makePdf(selectedHotel, resa.getClient(), resa);		
 				
@@ -1374,6 +1386,7 @@ public class ClientGUI extends JFrame {
 		
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				errorMessage.setVisible(true);
 				destinationInput.setVisible(true);
 				homeMessage.setVisible(true);
