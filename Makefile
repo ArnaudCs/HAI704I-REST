@@ -27,6 +27,7 @@ max:
 	(cd AgencyRest ; mvn spring-boot:run&)
 	(cd TripFinder ; mvn spring-boot:run&)
 	(cd HotelScanner ; mvn spring-boot:run&)
+	@echo "[BASH] Press enter if nothing happened"
 	@echo "[BASH] Project ready"
 
 min:
@@ -39,6 +40,7 @@ min:
 	(cd AgencyRest ; mvn spring-boot:run&)
 	(cd TripFinder ; mvn spring-boot:run&)
 	(cd HotelScanner ; mvn spring-boot:run&)
+	@echo "[BASH] Press enter if nothing happened"
 	@echo "[BASH] Project ready"
 
 
@@ -83,4 +85,5 @@ clean:
 	(cd Comparator ; mvn clean&)
 	(cd Kyriad ; mvn clean&)
 	(cd FormuleMtp ; mvn clean&)
+	@echo "[BASH] Press enter if nothing happened"
 	@echo "[BASH] Project cleaned"
